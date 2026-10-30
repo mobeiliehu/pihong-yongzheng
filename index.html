@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>批红 · 雍正十三年</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="批红">
+<meta name="theme-color" content="#8b0000">
 <style>
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
@@ -62,6 +70,13 @@
     }
     .splash button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,.4); }
     .splash.hidden { display: none !important; }
+    #pwa-install { position: fixed; right: 14px; bottom: 14px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; font-family: inherit; }
+    #pwa-install button { padding: 9px 16px; border-radius: 999px; border: 2px solid var(--imperial-gold); background: rgba(26,26,26,.92); color: var(--imperial-gold); font-size: 13px; letter-spacing: 2px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+    #pwa-install button:hover { background: rgba(45,45,45,.95); transform: translateY(-2px); }
+    #pwa-install .tip { max-width: 260px; background: rgba(26,26,26,.92); border: 1px solid var(--imperial-gold); color: #f0ece0; border-radius: 10px; padding: 9px 13px; font-size: 12.5px; line-height: 1.75; }
+    .alt-games { margin-top: 16px; font-size: .9em; color: rgba(250,248,240,.6); }
+    .alt-games a { color: var(--imperial-gold); text-decoration: none; border-bottom: 1px dotted rgba(212,175,55,.6); }
+    .alt-games a:hover { color: #fff; }
 
     /* ---------- 头部 ---------- */
     header { text-align: center; padding: 34px 20px 18px; animation: fadeIn .8s ease-out; }
@@ -294,6 +309,12 @@
         朝堂之上，有人忠、有人骄、有人观望、有人等你看错人。
     </div>
     <button id="startBtn">登 极</button>
+    <div class="alt-games">另有一款：<a href="miao/">喵喵过街</a>（可安装为 App，离线可玩）</div>
+</div>
+
+<div id="pwa-install">
+    <span class="tip" id="pwa-install-tip" hidden></span>
+    <button id="pwa-install-btn" hidden>安装为 App</button>
 </div>
 
 <div class="container" id="container" style="display:none">
@@ -343,6 +364,31 @@
 </div>
 
 <script>
+/* ---------- PWA：Service Worker 与安装引导 ---------- */
+(function () {
+    var btn = document.getElementById('pwa-install-btn'), tip = document.getElementById('pwa-install-tip');
+    var deferred = null;
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    function showTip(t) { tip.textContent = t; tip.hidden = false; }
+    if (!standalone) {
+        if (isIOS) showTip('在 Safari 中点「分享」→「添加到主屏幕」，即可当 App 玩。');
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault(); deferred = e; btn.hidden = false;
+            showTip('可安装到桌面 / 主屏幕，离线也能玩。');
+        });
+        btn.addEventListener('click', function () {
+            if (!deferred) { showTip('请在浏览器菜单中选择「安装应用 / 添加到主屏幕」。'); return; }
+            deferred.prompt();
+            deferred.userChoice.then(function (c) { if (c.outcome === 'accepted') { btn.hidden = true; tip.hidden = true; } deferred = null; });
+        });
+        window.addEventListener('appinstalled', function () { btn.hidden = true; tip.hidden = true; });
+    }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    }
+})();
+
 /* ============================================================
    《批红 · 雍正十三年》游戏数据（一）雍正元年 — 雍正四年
    新增效果键：
