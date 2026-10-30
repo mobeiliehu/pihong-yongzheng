@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>批红 · 雍正十三年</title>
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes seal { 0% { transform: rotate(-10deg) scale(0); opacity: 0; } 50% { transform: rotate(5deg) scale(1.1); } 100% { transform: rotate(0deg) scale(1); opacity: 1; } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes glowPulse { 0%,100% { box-shadow: 0 0 0 rgba(212,175,55,0); } 50% { box-shadow: 0 0 18px rgba(212,175,55,.45); } }
+    :root {
+        --imperial-red: #8b0000;
+        --imperial-gold: #d4af37;
+        --paper-bg: #faf8f0;
+        --ink-black: #1a1a1a;
+        --seal-red: #c41e3a;
+        --jade: #2e6b5e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: "STKaiti", "KaiTi", "SimSun", serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: var(--ink-black);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body::before {
+        content: '';
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(212,175,55,0.10) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(139,0,0,0.10) 0%, transparent 50%);
+        pointer-events: none; z-index: 0;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; position: relative; z-index: 1; }
+
+    /* ---------- 开场 ---------- */
+    .splash {
+        position: fixed; inset: 0; z-index: 50;
+        background: radial-gradient(circle at 50% 40%, #3a2b12 0%, #141414 70%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; text-align: center; padding: 30px;
+    }
+    .splash h1 {
+        font-size: 3.6em; letter-spacing: 16px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        animation: float 3s ease-in-out infinite;
+    }
+    .splash .sub { color: var(--imperial-gold); font-size: 1.15em; letter-spacing: 6px; line-height: 2; }
+    .splash .hint { color: rgba(250,248,240,.65); font-size: .95em; line-height: 1.9; max-width: 640px; }
+    .splash button {
+        margin-top: 12px; padding: 14px 52px; font-size: 1.15em; cursor: pointer;
+        font-family: inherit; letter-spacing: 6px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, #a51a1a 100%);
+        color: var(--imperial-gold); border: 2px solid var(--imperial-gold); border-radius: 8px;
+        transition: all .3s;
+    }
+    .splash button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,.4); }
+    .splash.hidden { display: none !important; }
+
+    /* ---------- 头部 ---------- */
+    header { text-align: center; padding: 34px 20px 18px; animation: fadeIn .8s ease-out; }
+    h1.title {
+        font-size: 3.2em;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        margin-bottom: 10px; letter-spacing: 14px;
+    }
+    .subtitle { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+
+    /* ---------- 时间 / 进度 ---------- */
+    .timeline-bar {
+        display: flex; align-items: center; justify-content: center; gap: 14px;
+        margin: 22px 0 8px; flex-wrap: wrap;
+    }
+    .year-display {
+        font-size: 1.5em; color: var(--imperial-gold); font-weight: bold;
+        text-shadow: 0 0 20px rgba(212,175,55,.45);
+    }
+    .progress-wrap { width: 100%; max-width: 620px; margin: 6px auto 26px; }
+    .progress-track { height: 8px; background: rgba(255,255,255,.10); border-radius: 4px; overflow: hidden; border: 1px solid rgba(212,175,55,.35); }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--imperial-red), var(--imperial-gold)); transition: width .5s ease; }
+    .progress-label { text-align: center; color: rgba(212,175,55,.8); font-size: .85em; letter-spacing: 2px; margin-top: 6px; }
+
+    /* ---------- 数值面板 ---------- */
+    .stats-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px; margin-bottom: 26px; animation: fadeIn .8s ease-out .2s both; }
+    .stat-card {
+        background: linear-gradient(135deg, rgba(250,248,240,.95) 0%, rgba(255,255,255,.9) 100%);
+        border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 16px;
+        text-align: center; transition: all .35s; box-shadow: 0 8px 20px rgba(0,0,0,.3);
+    }
+    .stat-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 30px rgba(212,175,55,.35); }
+    .stat-card.danger { border-color: var(--seal-red); animation: glowPulse 1.8s ease-in-out infinite; }
+    .stat-label { font-size: .88em; color: var(--imperial-red); margin-bottom: 6px; font-weight: bold; letter-spacing: 2px; }
+    .stat-value { font-size: 1.55em; font-weight: bold; background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-bar { width: 100%; height: 6px; background: rgba(0,0,0,.1); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+    .stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--imperial-red), var(--imperial-gold)); border-radius: 3px; transition: width .5s ease-out; }
+
+    /* ---------- 改革进度 ---------- */
+    .reform-panel {
+        background: rgba(26,26,26,.75); border: 2px solid var(--imperial-gold); border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 26px;
+    }
+    .reform-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 14px; text-align: center; font-weight: normal; }
+    .reform-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .reform-name { color: #f0ece0; width: 92px; font-size: .95em; flex: none; }
+    .reform-track { flex: 1; height: 12px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; }
+    .reform-fill { height: 100%; width: 0%; border-radius: 6px; transition: width .6s ease; background: linear-gradient(90deg, #6b3b1a, var(--imperial-gold)); }
+    .reform-num { color: var(--imperial-gold); width: 46px; text-align: right; font-size: .9em; flex: none; }
+
+    /* ---------- 人物面板 ---------- */
+    .people-panel { background: rgba(26,26,26,.75); border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 18px 22px; margin-bottom: 26px; }
+    .people-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 14px; text-align: center; font-weight: normal; }
+    .people-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 22px; }
+    .person { display: flex; align-items: center; gap: 10px; }
+    .person-name { width: 92px; flex: none; color: #f0ece0; font-size: .95em; }
+    .person-track { flex: 1; height: 10px; background: rgba(255,255,255,.08); border-radius: 5px; position: relative; overflow: hidden; }
+    .person-track::before { content:''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(212,175,55,.35); }
+    .person-fill { position: absolute; top: 0; bottom: 0; border-radius: 5px; transition: all .6s ease; }
+    .person-fill.pos { background: linear-gradient(90deg, rgba(212,175,55,.35), var(--imperial-gold)); }
+    .person-fill.neg { background: linear-gradient(90deg, var(--seal-red), rgba(196,30,58,.4)); }
+    .person-val { width: 44px; text-align: right; font-size: .88em; flex: none; color: var(--imperial-gold); }
+    .person-val.neg { color: #e8788c; }
+
+    /* ---------- 奏折 ---------- */
+    .memorial-card {
+        background: var(--paper-bg); border: 3px solid var(--imperial-gold); border-radius: 16px;
+        padding: 34px; margin-bottom: 26px; box-shadow: 0 15px 40px rgba(0,0,0,.5);
+        position: relative; animation: slideIn .5s ease-out;
+    }
+    .memorial-card::before {
+        content: '奏'; position: absolute; top: -20px; right: 40px;
+        width: 58px; height: 58px; background: var(--seal-red); color: var(--imperial-gold);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.7em; font-weight: bold; border: 3px solid var(--imperial-gold);
+        box-shadow: 0 5px 15px rgba(196,30,58,.6); animation: seal .8s cubic-bezier(.68,-.55,.265,1.55);
+    }
+    .memorial-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid var(--imperial-gold); padding-bottom: 16px; margin-bottom: 16px; }
+    .memorial-from { color: var(--imperial-red); font-size: 1.05em; font-weight: bold; }
+    .memorial-date { color: #8a7f66; font-size: .9em; letter-spacing: 1px; }
+    .memorial-title { font-size: 1.45em; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
+    .memorial-summary { color: #666; font-style: italic; line-height: 1.8; border-left: 3px solid rgba(212,175,55,.7); padding-left: 12px; }
+    .memorial-body { margin: 22px 0; line-height: 2.15; text-indent: 2em; white-space: pre-wrap; font-size: 1.05em; color: #262626; }
+    .zhupi { background: linear-gradient(135deg, #ffe4e1 0%, #ffd4d4 100%); border-left: 5px solid var(--seal-red); padding: 18px 20px; margin: 18px 0; border-radius: 8px; }
+    .zhupi-label { font-weight: bold; color: var(--seal-red); margin-bottom: 6px; letter-spacing: 2px; }
+    .zhupi-text { color: var(--seal-red); font-size: 1.15em; font-weight: bold; line-height: 1.95; }
+    .mize { background: linear-gradient(135deg, #f2f0ea 0%, #e3e0d6 100%); border-left: 5px solid #555; padding: 18px 20px; margin: 18px 0; border-radius: 8px; display: none; }
+    .mize.revealed { display: block; animation: fadeIn .4s ease-out; }
+    .mize-label { font-weight: bold; color: #444; margin-bottom: 6px; letter-spacing: 2px; }
+    .mize-text { color: #333; line-height: 1.95; }
+    .reveal-btn {
+        display: inline-block; padding: 10px 22px; margin: 6px 0;
+        background: linear-gradient(135deg, #4a4a4a 0%, #6e6e6e 100%); color: #f5f2e8;
+        border: 1px solid #333; border-radius: 6px; cursor: pointer; font-size: .98em; font-family: inherit;
+        transition: all .3s;
+    }
+    .reveal-btn:hover { background: linear-gradient(135deg, #3c3c3c 0%, #5c5c5c 100%); transform: translateY(-2px); }
+    .options { margin-top: 26px; }
+    .option-btn {
+        display: block; width: 100%; padding: 18px 24px; margin: 12px 0;
+        background: linear-gradient(135deg, rgba(250,248,240,.92) 0%, rgba(255,255,255,.82) 100%);
+        border: 3px solid var(--imperial-gold); border-radius: 12px; cursor: pointer;
+        transition: all .35s; text-align: left; font-size: 1.05em; color: var(--ink-black);
+        font-family: inherit; box-shadow: 0 5px 15px rgba(0,0,0,.2);
+    }
+    .option-btn:hover { background: linear-gradient(135deg, #fffdf7 0%, #fff6ea 100%); border-color: var(--imperial-red); transform: translateX(10px); }
+    .option-label { font-weight: bold; font-size: 1.15em; color: var(--imperial-red); }
+    .option-hint { color: #777; font-size: .88em; margin-top: 6px; line-height: 1.7; }
+
+    /* ---------- 记事 ---------- */
+    .log-panel {
+        background: linear-gradient(135deg, rgba(26,26,26,.9) 0%, rgba(45,45,45,.85) 100%);
+        border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 22px;
+        margin-top: 34px; max-height: 380px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    }
+    .log-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 12px; font-weight: normal; }
+    .log-entry { padding: 10px 0; border-bottom: 1px dashed rgba(212,175,55,.3); color: var(--imperial-gold); font-size: .96em; line-height: 1.8; }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry .log-time { color: rgba(212,175,55,.6); margin-right: 8px; }
+
+    /* ---------- 结局 ---------- */
+    .ending-card { background: var(--paper-bg); border: 3px solid var(--imperial-gold); border-radius: 16px; padding: 40px; box-shadow: 0 15px 40px rgba(0,0,0,.5); animation: fadeIn .8s ease-out; }
+    .ending-card h2 { text-align: center; font-size: 2.3em; color: var(--imperial-red); margin-bottom: 8px; letter-spacing: 8px; }
+    .ending-rank { text-align: center; font-size: 1.5em; color: var(--imperial-gold); margin-bottom: 26px; letter-spacing: 4px; }
+    .ending-card .ending-body { font-size: 1.08em; line-height: 2.1; text-indent: 2em; color: #2a2a2a; }
+    .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin: 26px 0; }
+    .score-box { background: rgba(255,255,255,.7); border: 1px solid rgba(212,175,55,.6); border-radius: 10px; padding: 14px; text-align: center; }
+    .score-box .k { color: #777; font-size: .85em; letter-spacing: 2px; }
+    .score-box .v { font-size: 1.5em; font-weight: bold; color: var(--imperial-red); }
+    .fates { background: rgba(0,0,0,.04); border-radius: 10px; padding: 18px 22px; margin: 24px 0; }
+    .fates h4 { color: var(--imperial-red); letter-spacing: 3px; margin-bottom: 12px; font-size: 1.05em; }
+    .fate-line { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,.1); font-size: .97em; line-height: 1.7; }
+    .fate-line:last-child { border-bottom: none; }
+    .fate-who { width: 92px; flex: none; font-weight: bold; color: #444; }
+    .fate-what { flex: 1; color: #333; }
+    .ending-actions { text-align: center; margin-top: 30px; }
+    .ending-actions button {
+        padding: 13px 46px; font-size: 1.08em; cursor: pointer; font-family: inherit; letter-spacing: 5px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, #a51a1a 100%); color: var(--imperial-gold);
+        border: 2px solid var(--imperial-gold); border-radius: 8px; transition: all .3s;
+    }
+    .ending-actions button:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(212,175,55,.4); }
+
+    .warn {
+        background: rgba(196,30,58,.12); border-left: 4px solid var(--seal-red); color: #f0c9cf;
+        padding: 12px 16px; border-radius: 6px; font-size: .92em; margin: 14px 0; display: none;
+    }
+    .warn.show { display: block; }
+
+
+    /* ---------- 密折抉择 ---------- */
+    .mize-choice { background: rgba(40,40,40,.06); border: 1px dashed rgba(212,175,55,.85); border-radius: 10px; padding: 18px 20px; margin: 18px 0; }
+    .mize-choice-text { color: #4a4a4a; line-height: 1.95; font-size: .98em; }
+    .mize-choice-text b { color: var(--imperial-red); }
+    .mize-choice-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .skip-btn {
+        display: inline-block; padding: 10px 22px; margin: 6px 0;
+        background: linear-gradient(135deg, #efece2 0%, #ded9c9 100%); color: #5a5548;
+        border: 1px solid #b9b29a; border-radius: 6px; cursor: pointer; font-size: .98em; font-family: inherit;
+        transition: all .3s;
+    }
+    .skip-btn:hover { background: linear-gradient(135deg, #f6f3e9 0%, #e8e2d0 100%); transform: translateY(-2px); }
+    .mize.sealed { display: block; background: linear-gradient(135deg, #efeee8 0%, #e6e4dc 100%); border-left-color: #999; }
+    .mize.sealed .mize-text { color: #777; font-style: italic; }
+    .option-tag { display: inline-block; margin-top: 8px; padding: 3px 10px; font-size: .78em; letter-spacing: 1px; color: #6b4f16; background: rgba(212,175,55,.28); border-radius: 10px; }
+
+
+    /* 密折抉择：代价表 */
+    .mize-cost-table { margin-top: 14px; border: 1px solid rgba(120,100,40,.35); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.55); }
+    .mct-row { display: grid; grid-template-columns: 84px 56px 56px 1fr; gap: 8px; align-items: start; padding: 9px 12px; border-bottom: 1px dashed rgba(120,100,40,.28); font-size: .9em; line-height: 1.7; }
+    .mct-row:last-child { border-bottom: none; }
+    .mct-head { background: rgba(212,175,55,.22); font-weight: bold; color: #4a3a10; letter-spacing: 1px; }
+    .mct-k { font-weight: bold; color: var(--imperial-red); }
+    .mct-up { color: #1f7a4d; font-weight: bold; }
+    .mct-down { color: #9a6a1c; font-weight: bold; }
+    .mct-d { color: #555; }
+    .mct-d b { color: #333; }
+    .mct-d b.warntxt, .warntxt { color: var(--seal-red); }
+    .mize-current { margin-top: 12px; font-size: .88em; color: #6a6355; letter-spacing: 1px; }
+    .mize-current b { color: var(--imperial-red); }
+    .reveal-btn em, .skip-btn em { display: block; font-style: normal; font-size: .78em; opacity: .85; letter-spacing: 1px; margin-top: 3px; }
+    .mize-cost { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(120,100,40,.3); font-size: .88em; color: #6a6355; letter-spacing: 1px; }
+    /* 圣心二端 */
+    .heart-note { font-size: .78em; color: rgba(240,236,224,.55); margin: -4px 0 10px 92px; letter-spacing: 1px; }
+    @media (max-width: 640px) { .heart-note { margin-left: 74px; } .mct-row { grid-template-columns: 70px 44px 44px 1fr; font-size: .84em; } }
+
+    /* ---------- 支线事件 ---------- */
+    .event-card {
+        background: linear-gradient(135deg, #fdfaf2 0%, #f4f0e3 100%);
+        border: 3px solid #8a7f66; border-radius: 16px; padding: 34px; margin-bottom: 26px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.5); position: relative; animation: slideIn .5s ease-out;
+    }
+    .event-card[data-tag="灾异"] { border-color: #2e6b5e; }
+    .event-card[data-tag="言官"] { border-color: #7b3fa0; }
+    .event-card[data-tag="宗室"] { border-color: #b8860b; }
+    .event-card[data-tag="边事"] { border-color: #8b0000; }
+    .event-card[data-tag="民变"], .event-card[data-tag="民生"] { border-color: #3b5f8a; }
+    .event-ribbon {
+        position: absolute; top: -16px; left: 34px; padding: 6px 18px;
+        background: #4a4636; color: var(--imperial-gold); font-size: .9em; letter-spacing: 3px;
+        border-radius: 6px; border: 2px solid var(--imperial-gold); box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    }
+    .event-card .memorial-from { color: #4a4636; }
+    .event-card .memorial-title::after { content: ''; }
+    .reform-fill.alt { background: linear-gradient(90deg, #2e6b5e, #7fb8a6); }
+    .reform-track.axis { position: relative; }
+    .reform-track.axis .axis-mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: rgba(212,175,55,.75); }
+    .reform-fill.axisfill { position: absolute; top: 0; bottom: 0; }
+    .reform-fill.axisfill.sev { background: linear-gradient(90deg, rgba(196,30,58,.45), var(--seal-red)); }
+    .reform-fill.axisfill.mer { background: linear-gradient(90deg, #4f8f7e, rgba(127,184,166,.5)); }
+
+    @media (max-width: 768px) {
+        h1.title { font-size: 2.2em; letter-spacing: 8px; }
+        .splash h1 { font-size: 2.4em; letter-spacing: 8px; }
+        .stats-panel { grid-template-columns: repeat(2, 1fr); }
+        .memorial-card { padding: 24px; }
+        .reform-name, .person-name { width: 74px; font-size: .88em; }
+        .fate-who { width: 74px; }
+    }
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+    <h1>批红 · 雍正十三年</h1>
+    <div class="sub">雍正元年（1723）至雍正十三年（1735）</div>
+    <div class="hint">
+        你是雍正。十三载春秋，三十余道奏折待批。<br>
+        每一道硃批，都是一次取舍：钱粮、民心、军权、吏治、宗室，样样都要。<br>
+        朝堂之上，有人忠、有人骄、有人观望、有人等你看错人。
+    </div>
+    <button id="startBtn">登 极</button>
+</div>
+
+<div class="container" id="container" style="display:none">
+    <header>
+        <h1 class="title">批 红</h1>
+        <p class="subtitle">雍正十三年 · 十三道纪年</p>
+    </header>
+
+    <div class="timeline-bar">
+        <div class="year-display" id="yearDisplay">雍正元年（1723）</div>
+    </div>
+    <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">第 1 / 33 折</div>
+    </div>
+
+    <div class="stats-panel" id="statsPanel"></div>
+    <div id="warningBox"></div>
+
+    <div class="reform-panel">
+        <h3>国 政 大 业</h3>
+        <div id="reformPanel"></div>
+    </div>
+
+
+    <div class="reform-panel">
+        <h3>朝 局 取 向</h3>
+        <div id="meterPanel"></div>
+    </div>
+
+    <div class="reform-panel">
+        <h3>圣 心 二 端</h3>
+        <div id="heartPanel"></div>
+    </div>
+
+    <div class="people-panel">
+        <h3>朝 局 人 心</h3>
+        <div class="people-grid" id="peoplePanel"></div>
+    </div>
+
+    <div id="memorialContainer"></div>
+
+    <div class="log-panel" id="logPanel">
+        <h3>起 居 注</h3>
+        <div id="logList"></div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   《批红 · 雍正十三年》游戏数据（一）雍正元年 — 雍正四年
+   新增效果键：
+     severity  严刻度（峻法、株连、重典）  初始 45
+     mercy     宽仁度（宽赋、赦免、恤民）  初始 50
+     integrity 吏治清度（清查、追赔、抑豪强）初始 40
+   选项可带 needMize:true —— 仅在查阅密折后出现（知情选项）
+   选项可带 blindRisk:true —— 未阅密折而选之，则事后追悔（信息差惩罚）
+   ============================================================ */
+const OFFICIALS = [
+    { key: 'zhangTingyu', name: '张廷玉' },
+    { key: 'tianWenjing', name: '田文镜' },
+    { key: 'yunxiang',    name: '怡亲王' },
+    { key: 'longkodo',    name: '隆科多' },
+    { key: 'nianGengyao', name: '年羹尧' },
+    { key: 'yinsi',      name: '允禩' },
+    { key: 'eertai',     name: '鄂尔泰' },
+    { key: 'liwei',      name: '李卫' }
+];
+
+const gameData = [
+
+/* ===================== 雍正元年 ===================== */
+{
+    year: 1723, month: 6,
+    from: '山西布政使 田文镜',
+    title: '为请将火耗归公事',
+    summary: '山西火耗倍于正赋，请于本省先行归公，充正用、养廉吏。',
+    body: '臣田文镜谨奏：\n\n臣到任山西，饬查各府州县钱粮，岁入正赋之外，例有火耗。名曰「耗」，实则州县按亩按钱加派，层层取足，岁以为常。臣核算通省之数，正赋之外，耗银倍于正赋。\n\n此耗羡既非正供，例应由州县自收自用，其中大半入于官吏私囊。臣愚以为：耗羡归公，则耗有定，官无额外之需；取之既公，则可养廉、可济公、可备荒、可充军储。\n\n惟是归公之后，州县办公之费无所出，势必另派。臣请先定章程：于耗羡中酌留十分之一二，为州县公费，其余尽数归公，另设「养廉银」，俾绅士在任者廉于谋。\n\n臣不敢以一人之言遽行，伏乞圣裁。',
+    zhupi: '所奏是。火耗归公，朕所深许。然须定章程、宽期限、择清吏先行，不可以一朝之政惊扰天下。着尔会同山西巡抚布政使详议具奏，朕批行之。',
+    mize: '密报：田文镜到山西未几，即檄行各府，凡从前火耗陋规悉数革除，岁增公费银四十余万两。其人Machinery峻、不恤物议，劾章月月而至，太原、潞安两府知府皆以「生事激众」参之。\n\n臣另有一疑：火耗一项，州县相沿百年，骤行归公，吏无利则怨，民间亦未必信。此事成与不成，全在皇上信与不信。臣以为：皇上若只试之于一省而不期其成，则田文镜必得罪；若期其成，则当有破格之举，以励天下。',
+    options: [
+        { blindRisk: true, label: '嘉奖田文镜，着各省一体仿行', hint: '破格推动，岁增公费百万；吏民震动，田文镜亦结怨天下', effects: { 'reforms.huohao': 32, publicSupport: 2, officialMorale: 12, treasury: 30, severity: 6, integrity: 14, secretMemorials: 1 }, log: '火耗归公颁行天下，各省岁增公费银百万有奇。' },
+        { label: '令其先在山西试行，缓及天下', hint: '不贪功，求稳；民间实惠较慢', effects: { 'reforms.huohao': 14, publicSupport: 4, officialMorale: 5, treasury: 12, integrity: 5 }, log: '火耗归公先在山西试行，民间渐知「公耗」之名。' },
+        { label: '责其宽一分、缓一分，毋以刻急激民', hint: '保全推行之力，代价是吏怨', effects: { 'reforms.huohao': 20, publicSupport: 2, officialMorale: -4, mercy: 8, treasury: 15 }, log: '田文镜奉旨「宽分则民受一分」，山西公费归公之数稍减。' },
+        { label: '密授机宜：先清吏、次清额、后清耗，三年为期', hint: '知情方略——先换人再动制度', needMize: true, effects: { 'reforms.huohao': 26, officialMorale: 10, integrity: 18, treasury: 18, publicSupport: 1, secretMemorials: 1 }, log: '火耗归公分三步行：先汰不廉之吏，次定耗额之数，后定归公之制，三年为期。' }
+    ]
+},
+{
+    year: 1723, month: 8,
+    from: '翰林院掌院学士 张廷玉',
+    title: '为圣祖仁皇帝宾天请旨举行登极大典事',
+    summary: '圣祖宾天，请定登极大典、祭天告庙诸典，以定人心。',
+    body: '臣张廷玉谨奏：\n\n圣祖仁皇帝于康熙六十一年十一月十三日宾天于畅春园，遗诏传位于皇四子，诏用蓝笔，玺用「皇帝之宝」。\n\n臣等恭请皇上嗣位，以慰天下臣民之心。登极大典、祭天告庙、告于阙下、颁诏天下，诸事不可不备。\n\n然臣不敢不言：自十月以来，京师内外人心浮动，传闻诏书之语不一，宗室之间，允禩居京师，允禵握兵于西北，二人皆未之觐。\n\n典不可不隆，费亦不可不省；礼当宜从朝廷旧典，而名分尤须明白。臣请先定典礼条目，再择期行礼。\n\n伏乞圣裁。',
+    zhupi: '知道了。着礼部、鸿胪寺即行拟定登极大典仪注，祭天告庙诸典，俱照旧制，毋得增减。朕继位，天下自当安定。',
+    mize: '密报：允禩自十月以来，夜会宗室诸王于其府，语及诏书；又遣人往各处州县传言。允禵在西安、宁夏增设私驿，逾制甚多，其所著《远西见闻录》之外，传抄密札甚夥。\n\n又怡亲王允祥以总理事务，咳血之症时作，御前常扶疾趋值。臣以为：皇上初立，正需手足，而手足正弱，此其可虑者。',
+    options: [
+        { blindRisk: true, label: '速办大典，隆礼以安人心', hint: '银较多，宗室无话可说', effects: { imperialPower: 12, 'officials.yinsi': -10, 'officials.longkodo': 8, treasury: -25, severity: 4 }, log: '登极大典依制举行，颁诏天下，四海称贺。' },
+        { label: '大典从简，诏示勤政之意', hint: '省帑，但宗室物议难息', effects: { publicSupport: 7, treasury: -5, mercy: 5, 'officials.yinsi': 4 }, log: '登极大典从简举行，诏告天下励精图治。' },
+        { label: '典宜隆，同时下诏宣召允禵回京', hint: '一举消除西北隐患', effects: { imperialPower: 16, militaryStrength: 8, 'officials.yinsi': -12, 'officials.longkodo': 6, treasury: -30, secretMemorials: 1 }, log: '大典既举，旋下诏宣召十四王允禵回京。' },
+        { label: '密着隆科多录允禩、允禵往来书札，事定后治之', hint: '知情方略——先存证据，不打草惊蛇', needMize: true, effects: { imperialPower: 14, 'officials.yinsi': -8, 'officials.longkodo': 10, treasury: -10, secretMemorials: 2 }, log: '隆科多奉密旨录事，允禩、允禵往来书札一一在案。' }
+    ]
+},
+{
+    year: 1723, month: 10,
+    from: '步军统领 隆科多',
+    title: '为西北军务及十四王情形密陈事宜事',
+    summary: '十四王拥兵西宁七年，权势渐重，请降旨处置。',
+    body: '臣隆科多谨奏：\n\n奉旨密查允禵情形。臣查得，允禵自康熙五十四年领军出塞，驻守西宁，节制青海、西宁、宁夏诸处军务，粮饷由其一手支销。\n\n其人果毅能军，收拢人心甚速，然性骄而忍，不甚恭顺。近闻其在军中先阅京中邸报，察知朝中人事；又于西安、宁夏增置私驿马匹，逾制甚多；每有廷寄，行之必稽其迟速。\n\n臣以为：西陲重镇，权不可不重；然重镇之臣久处权柄之地，威福自专，则朝廷命令有所不行。此事干系不小，不敢不言。',
+    zhupi: '知道了。着隆科多密加访察，所得实情，密封以闻毋得张扬，亦毋得妄加罪罚。朕自有处置。',
+    mize: '密报：允禵于军中大造佛像，广收僧道，颇事异端；与年羹尧往来密札甚密，二人论西北事，语多怨望。隆科多则另有私意，欲以此事邀非常之功。\n\n臣窃疑：隆科多此举，未必尽为朝廷计。皇上宜先定大计，不可使隆科多与年羹尧二人共知其事——彼二人若知，则恐各自饰张，反生枝节。',
+    options: [
+        { blindRisk: true, label: '降旨宣召允禵回京，以削其权', hint: '正面收回兵权，稳妥合祖制', effects: { imperialPower: 14, militaryStrength: -8, 'officials.yinsi': -6, 'officials.longkodo': 10, treasury: -15 }, log: '诏召十四王允禵回京，兵权自此归朝。' },
+        { label: '先不动声色，徐观其变', hint: '留后手，但纵其坐大', effects: { imperialPower: -8, militaryStrength: 4, 'officials.longkodo': -8, secretMemorials: 1 }, log: '西陲按兵不动，允禵之气焰日盛。' },
+        { label: '密令年羹尧牵制，隆科多仍加倚重', hint: '以西北制西北，代价是养虎', effects: { imperialPower: 6, militaryStrength: 10, 'officials.longkodo': 8, 'officials.nianGengyao': 12, treasury: -20 }, log: '西北以年羹尧牵制允禵，隆科多得专署之权。' },
+        { label: '密勿使年、隆预闻，只以「朕意」密授岳钟琪一人', hint: '知情方略——专一而不贰', needMize: true, effects: { imperialPower: 16, militaryStrength: 6, 'officials.nianGengyao': -6, 'officials.longkodo': 4, treasury: -15, secretMemorials: 2 }, log: '西陲之谋不告年、隆，密授岳钟琪一人专办。' }
+    ]
+},
+{
+    year: 1723, month: 12,
+    from: '怡亲王 允祥',
+    title: '为总理事务谨陈钱粮并旗人贫困事',
+    summary: '旗人贫困、投充之弊、户部出纳混淆，乞明定制。',
+    body: '臣允祥谨奏：\n\n皇上以臣总理事务，臣日夜思维，惟钱粮一项关系天下根本。\n\n今旗人不但圈地，并有「投充」之弊：民户以田产家人投充旗下，名为投充，实则豪强以一纸投充文契侵占民产。一旦遇有差徭、逃赋，则责令投充之户代赔，谓之「小民自投充」。此弊一开，旗下富室皆得，而旗下贫民皆困。\n\n又户部出纳混淆，正赋、耗羡、火耗各自一款，各省解款实数难以稽核。臣请：\n\n一、严查投充，限一年清理，嗣后不许以民产为旗产；\n二、各省钱粮分列正赋、火耗、耗羡三项，各归各目；\n三、旗下旗人贫困者，量予赈恤，毋令为盗；\n四、户部出入，岁终具册御览。\n\n伏乞圣裁。',
+    zhupi: '所奏是。投充之弊，着即严查清理限满一年，不得展缓。钱粮分目，着户部核实另奏。汝病未愈，凡事勉力为之，毋得过劳。',
+    mize: '密报：怡亲王咳血之症时作，夜间不能安卧，然以军务国事为念，夜不释卷。臣请早简辅弼之才，以备万一。\n\n又，投充一弊，其源在各省督抚与旗人互相容隐，若只令旗人自查，则必不能净。',
+    options: [
+        { label: '准其所奏，尽行严查', hint: '旗人怨，百姓悦，财政清', effects: { treasury: 35, publicSupport: 8, officialMorale: 10, integrity: 15, 'officials.yunxiang': 10 }, log: '查禁投充，清理旗地，各省钱粮分目解京。' },
+        { label: '准查投充，钱粮分目缓行', hint: '折中之策', effects: { treasury: 15, publicSupport: 5, officialMorale: 4 }, log: '旗地清理，户部分目之议留中。' },
+        { label: '责各省督抚与旗人同查，两造互相结状', hint: '知情方略——令其自相攻发', needMize: true, effects: { treasury: 30, publicSupport: 7, integrity: 22, officialMorale: 8, 'officials.yunxiang': 8 }, log: '投充之弊令督抚与旗人同查互结，岁减赔赋无算。' }
+    ]
+},
+
+/* ===================== 雍正二年 ===================== */
+{
+    year: 1724, month: 2,
+    from: '陕西提督 岳钟琪',
+    title: '为平定罗卜藏丹津叛乱事',
+    summary: '青海罗卜藏丹津谋反，臣已定西宁、庄浪、河州，请旨进剿。',
+    body: '臣岳钟琪谨奏：\n\n罗卜藏丹津上年冬谋反，袭青海驻军，掠驼马二十余万。西宁、松潘、甘州同时告警。臣时任陕西提督，奉旨率师四千，自松潘入拉卜夹，昼夜兼程，直抵西宁。\n\n臣既定西宁、庄浪、河州，斩获甚众。罗卜藏丹津逃入大草泽，穷追未获。\n\n其党已散，青海各部多降。臣请乘胜进剿，一鼓而定，勿使复聚。\n\n伏乞圣裁。',
+    zhupi: '西陲事关系全局，着即进剿，务求干净。粮饷器械，吾为汝筹之，勿以粮道为忧。',
+    mize: '密报：罗卜藏丹津遣使赴准噶尔求援，策妄阿拉布坦已遣兵西向。\n\n又，兵部档案中有年羹尧所上之疏，称罗卜藏丹津「势穷将死，不足为患」，其奏日期竟早于叛乱发现数月。臣不知年羹尧何以预知其亡，又何以不即以闻——此事关系年羹尧之诚与才，皇上不可不察。',
+    options: [
+        { label: '准其进剿，务求一劳永逸', hint: '速定青海，耗饷甚大', effects: { militaryStrength: 18, 'officials.nianGengyao': 12, treasury: -60, imperialPower: 6 }, log: '罗卜藏丹津授首，青海悉平。' },
+        { label: '令其持重，抚降为要', hint: '省饷，边患未清', effects: { militaryStrength: 6, publicSupport: 3, treasury: -25, mercy: 8, 'officials.nianGengyao': 6 }, log: '青海各部来降，罗卜藏丹津走伏未获。' },
+        { label: '召年羹尧入京面见，令岳钟琪专任', hint: '削年之权，重用新将', effects: { imperialPower: 14, militaryStrength: 8, 'officials.nianGengyao': -22, treasury: -45, severity: 5 }, log: '年羹尧被召入京，岳钟琪专领青海军务。' },
+        { label: '密令岳钟琪录年羹尧疏，一并封存，待其自露', hint: '知情方略——存证而不发', needMize: true, effects: { imperialPower: 12, militaryStrength: 14, 'officials.nianGengyao': -10, treasury: -50, secretMemorials: 2 }, log: '年羹尧原疏封存御前，岳钟琪专任青海军务。' }
+    ]
+},
+{
+    year: 1724, month: 5,
+    from: '山东巡抚 岳濬',
+    title: '为清查州县积欠事',
+    summary: '山东积欠逾百万，请定清理宽限之法，毋令疲民。',
+    body: '臣岳濬谨奏：\n\n臣到任，遍阅仓库簿籍，见各州县积欠钱粮合计逾百万两。问其故，皆曰年岁灾歉、逋赋日积。\n\n然臣细查，其中实有十分之三，并非灾荒，而是胥吏豪强包揽、州县摊派、层层中饱。真正无力完纳者，十不及五。\n\n若照旧例追比，饥民卖儿鬻女以应；而奸滑者反得逍遥。臣请：\n\n一、准百姓完纳十分之五，准旧欠一分，宽其一分；\n二、积欠在身者，许其完纳一部，分期带征；\n三、州县自理、吏胥自首者，免其罪，追赔入公。\n\n伏乞圣裁。',
+    zhupi: '所奏是。宽一分则民受一分，催科不严则吏益玩法。着即行文，务在核实，不得扰民。',
+    mize: '密报：山东积欠之实，巡抚幕友某私抽火耗一成三，年入数万。此人乃某大员之婿，案中牵连甚广。臣不敢径举，先密奏闻。\n\n又：皇上若宽赋而即黜一二人，则民间知宽赋为恩；若不黜，则宽赋反疑为姑息。',
+    options: [
+        { label: '准其宽一分、行一分', hint: '百姓得喘息，积欠部分核销', effects: { publicSupport: 10, treasury: -35, officialMorale: 6, 'reforms.tandin': 8, mercy: 12 }, log: '山东积欠宽减追比，百姓称便，藩库为之减色。' },
+        { blindRisk: true, label: '严追如额，一文不许缓', hint: '库帑保住，民怨沸腾', effects: { integrity: 4, treasury: 45, publicSupport: 6, officialMorale: -10, severity: 12 }, log: '山东追比严急，乡民怨声载道。' },
+        { label: '宽赋与究贪并行，黥贪吏以示天下', hint: '两难之策，费时费力', effects: { publicSupport: 8, treasury: 10, officialMorale: 14, 'reforms.tandin': 12, integrity: 18, severity: 6, secretMemorials: 1 }, log: '山东宽赋与究贪并行，黥吏若干。' },
+        { label: '先密拿幕友某、夺其柄，再行宽赋之诏', hint: '知情方略——先除侵吞之源', needMize: true, effects: { publicSupport: 9, treasury: 20, officialMorale: 12, 'reforms.tandin': 12, integrity: 20, severity: 6 }, log: '山东幕友某先被劾罢，宽赋之诏乃行。' }
+    ]
+},
+{
+    year: 1724, month: 11,
+    from: '川陕总督 年羹尧',
+    title: '为陈奏青海军务善后并请议叙将士事',
+    summary: '青海既定，臣拟善后八条，请旨定夺；并请一体议叙将士。',
+    body: '臣年羹尧谨奏：\n\n臣奉旨总督川陕，兼辖青海军务。罗卜藏丹津已平，青海各部悉平。臣愚以为，此番用兵，赖圣主神灵，诸将一心，方有此捷。\n\n善后事宜，臣拟八条：一、于西宁置办事大臣，节制青海各部；二、青海驻兵五千，隶抚标节制；三、青海各部年给赏银，仍循旧例；四、禁番僧干预番民婚娶；五、汉人不得擅入番界贸易；六、番目许其世袭；七、于西宁设青海驿，递送文书；八、遣官往准噶尔互市，以安其心。\n\n又各路将弁咸有劳绩，请一体议叙。\n\n伏乞圣裁。',
+    zhupi: '所奏八条，朕览之。军政大计，本朝自有一定规模，卿不必另立名色。至议叙将士，着兵部即行具题，不候朕再奏。',
+    mize: '密报：年羹尧奏事语气倨傲，谕阁臣、批属官俱用「便宜」字样；于西宁大筑府第，僭用九楹；其父年逾六旬，赐衔一等公，并欲为祖父母父母建坊。门下牲畜僮仆至数千，其一人题奏事，竟称「年大将军」。中号令皆出其门。\n\n又，所拟八条中，第三条「年给赏银」、第八条「遣官互市」，实皆增岁费、开边衅之端。皇上若径准之，后欲收手而不能。臣以为：宜准其一二，驳其五六，令其知有界。',
+    options: [
+        { label: '议叙将士，其权暂仍', hint: '不触霉头，然尾大不掉', effects: { militaryStrength: 12, 'officials.nianGengyao': 18, imperialPower: -8, treasury: -40 }, log: '年羹尧所奏将士一体议叙，其势愈骄。' },
+        { label: '温旨嘉奖，其权渐收，岁费另定限额', hint: '削其势，防其骄', effects: { imperialPower: 14, 'officials.nianGengyao': -15, militaryStrength: 4, treasury: -25, integrity: 8 }, log: '年羹尧所奏八条驳正，兵权渐收于朝廷。' },
+        { label: '命即赴京面见', hint: '风险最大之着', effects: { imperialPower: 20, 'officials.nianGengyao': -30, treasury: -10, severity: 8, secretMemorials: 2 }, log: '年羹尧奉诏入京，西北兵权由副将统领。' },
+        { label: '准其八条而密定三项禁忌，俟其自犯再收之', hint: '知情方略——纵之使其自露', needMize: true, effects: { imperialPower: 16, 'officials.nianGengyao': 8, militaryStrength: 8, treasury: -30, secretMemorials: 2 }, log: '年羹尧八条准行，而三项禁忌密定，俟其自投罗网。' }
+    ]
+},
+{
+    year: 1724, month: 12,
+    from: '大学士 高拱乾 等',
+    title: '为隆科多情形密奏事',
+    summary: '步军统领隆科多权势太重、逾制僭越，乞请调任。',
+    body: '臣高拱乾等谨奏：\n\n步军统领隆科多，自皇上践阼以来，兼领步军、畅春苑诸务，又预大典仪注，权势赫奕。\n\n其家中僮仆数千，花园数十顷；出入以黄骑马，仪节逾制；至其门前，官员皆趋走恐后。皇上待之厚矣，然中外已有「隆选」之谣。\n\n又闻隆科多于朝政事，每以密折陈说，多涉他人短长。臣等不以臣工劾大臣，然国家所以设官分职，正为彼此相制。\n\n伏乞圣裁。',
+    zhupi: '知道了。隆科多之事，朕自有分寸，卿等毋得轻动，亦毋得外泄。',
+    mize: '密报：隆科多与年羹尧往来甚密，密书中颇有怨望之语，二人皆言「内得某某之助」。又隆科多私改《大清会典》用例，并将御前所赐之物转赠与年羹尧。\n\n臣又查：隆科多曾私留禁中之人，逾制甚矣；又其家人生日，皇上赐宴，诸王皆往贺，礼数隆重。臣以为：隆科多之祸，不在其骄，而在其知太多、握太重、皇上又不能舍。',
+    options: [
+        { label: '留中不发，观其动作', hint: '不动即少动，但权柄日盛', effects: { 'officials.longkodo': 12, imperialPower: -10, secretMemorials: 1 }, log: '隆科多奏留中不发，其势益张。' },
+        { label: '即刻削夺隆科多兵权', hint: '雷霆手段，隐患立解', effects: { imperialPower: 18, 'officials.longkodo': -45, 'officials.nianGengyao': -12, officialMorale: 10, severity: 10 }, log: '隆科多被夺步军统领之权，交宗人府看管。' },
+        { label: '留其权而削其势，密遣监察', hint: '温水煮蛙', effects: { imperialPower: 6, 'officials.longkodo': 4, 'officials.nianGengyao': 8, secretMemorials: 2 }, log: '隆科多名位如故，实权渐削，密探日密。' },
+        { label: '密令张廷玉查其私改会典、转赠御物二事，先存其罪', hint: '知情方略——罪由自取', needMize: true, effects: { imperialPower: 14, 'officials.longkodo': 6, 'officials.nianGengyao': -8, officialMorale: 8, secretMemorials: 2 }, log: '隆科多私改会典、转赠御物二事，密交张廷玉存证。' }
+    ]
+},
+
+/* ===================== 雍正三年 ===================== */
+{
+    year: 1725, month: 3,
+    from: '工部尚书 朱轼',
+    title: '为修理黄河定岁额并请永不加派事',
+    summary: '河工糜费无度，请定岁额章；丁银既不加赋，请地方毋得另派。',
+    body: '臣朱轼谨奏：\n\n河工自世宗宪皇帝改折色为银，岁糜帑银至三百万两有奇。夫黄河之险非一朝之功可就，而岁修之费亦不可不节。臣请定岁额：\n\n一、岁修银一百四十万两，于部库另拨，不得挪移；\n二、各州县夫役银二十四万两，照旧摊派，不许额外加派；\n三、工料核实报销，毋得虚冒；\n四、河工既定此数，永不加派。\n\n又，皇上以滋生人丁永不加赋之政诏告天下，百姓莫不欢欣。臣以为，此政既行，若州县以「例」「赠」「派」名色另加，则是加赋也，非皇上初意。宜明令申明，永不加赋，以固民信。\n\n伏乞圣裁。',
+    zhupi: '河工定额定章，永不加派，此朕之至意。滋生人丁永不加赋之旨，地方官若有阳奉阴违者，朕必严办。',
+    mize: '密报：部库空虚，雍正二年所发帑银实有八万两未曾出库，经手者为户部某员。此人系隆科多门客。臣不敢不奏。\n\n又：河工定额之议，若行，州县摊派之数必减，此皆小民所愿；然总理河工之大臣，必以「工未完」为辞，抗拒成议。皇上宜先定其人。',
+    options: [
+        { label: '准其定章，永不加派', hint: '民心大安，岁额稍减', effects: { publicSupport: 11, treasury: -20, officialMorale: 12, 'reforms.tandin': 12, mercy: 10 }, log: '河工定岁额，永不加派，士民颂之。' },
+        { label: '定额定章，并究部库亏空', hint: '一箭双雕', effects: { treasury: 30, publicSupport: 7, officialMorale: 16, 'reforms.tandin': 12, integrity: 18, secretMemorials: 1 }, log: '河工定章，户部亏空八万两查实追赔。' },
+        { label: '暂不颁行，俟秋后再议', hint: '拖一拖', effects: { publicSupport: -8, officialMorale: -6 }, log: '河工定章之议留中不决。' },
+        { label: '诏各省巡抚具报河工情形，先定总理河工之臣', hint: '知情方略——先换人，再定章', needMime: false, needMize: true, effects: { publicSupport: 8, treasury: -10, officialMorale: 12, 'reforms.tandin': 10, integrity: 12, secretMemorials: 1 }, log: '各省巡抚具报河工实况，总理河工之臣另简。' }
+    ]
+},
+{
+    year: 1725, month: 8,
+    from: '直隶总督 李卫',
+    title: '为清查诡寄隐田并请绅衿一体当差事',
+    summary: '直隶绅衿多隐匿田亩，请严查诡寄，并定士民一体当差之制。',
+    body: '臣李卫谨奏：\n\n臣到任直隶，遍查田亩，觉察绅士之家隐匿田亩者十之三四。更有「诡寄」「寄名」之弊：田在他人名下，而实为势家所有，官府按册征粮，势家反得轻赋。\n\n又，绅衿不应当差，州县胥吏藉此生弊，衿棍、包庇之弊皆由于此。\n\n臣请：\n\n一、严查诡寄、寄名，隐田者田入官，另罚；\n二、绅衿一体当差，与庶民同例，此即皇上「士民一体」之旨；\n三、约束胥吏，不许借端索诈，违者严办；\n四、州县岁终造报田亩实数，不许以册籍为凭。\n\n伏乞裁。',
+    zhupi: '所奏是。田亩一项，是天下第一要务。绅衿一体当差，朕不稍贷。卿放手去做，不要顾虑人情。',
+    mize: '密报：直隶举人某，生员数十人，见官不下马，为祸乡里。及查其家产，田千顷，僮仆数百，然州县不敢问。臣已密访确情，只候圣裁。\n\n又：臣初莅任时，属吏皆以为臣不过以查案为名、扰民索贿，不之信。皇上若一意峻法而不稍宽其期，恐直隶士绅转相结党。',
+    options: [
+        { label: '准行，绅衿一体当差', hint: '触动人少之特权，阻力极大', effects: { 'reforms.tuigu': 22, publicSupport: 8, officialMorale: -8, 'officials.liwei': 12, treasury: 20, severity: 6 }, log: '直隶清查诡寄，绅衿一体当差，州县为之一新。' },
+        { label: '准查隐田，当差暂缓', hint: '折中推进', effects: { 'reforms.tuigu': 12, publicSupport: 4, treasury: 12, 'officials.liwei': 6 }, log: '直隶清查诡寄寄名，当差之议暂缓。' },
+        { label: '先办一府，验其可行再推行', hint: '最稳妥', effects: { 'reforms.tuigu': 6, publicSupport: 3, officialMorale: 4, mercy: 5 }, log: '顺天府先试清查田亩，行之有效。' },
+        { label: '先劾举人某以立威，隐田之令乃下', hint: '知情方略——杀鸡儆猴', needMize: true, effects: { 'reforms.tuigu': 20, publicSupport: 6, officialMorale: 6, severity: 12, 'officials.liwei': 10, secretMemorials: 1 }, log: '直隶举人某先被劾充，直隶乃下清查隐田之令。' }
+    ]
+},
+{
+    year: 1725, month: 12,
+    from: '领侍卫内大臣 平郡王 允禩',
+    title: '为扩充宗学并请定宗室服制事',
+    summary: '宗室子弟日繁而学额不足，请增额并严定服制。',
+    body: '臣允禩谨奏：\n\n宗人府事，臣领有日。惟近日宗室子弟日繁，读书者日少。臣查宗学额数止三十人，而待补者已逾百人。诸王封爵子孙众多，僮仆成群，其贫困者与编户无异。\n\n又本朝服制，宗室与外藩旗人相混，出入宫禁不禁，耗费物力。\n\n臣请：\n\n一、扩充宗学，广收族中子弟俊秀者入学，仍以八旗子弟充补；\n二、定宗室服制，禁用马蹄袖、朝珠等物，出入禁中一体照旗人例；\n三、宗室贫困者，别给钱米，毋令为不肖；\n四、严核宗人府册籍，令各王府报明人口田产。\n\n伏乞圣裁。',
+    zhupi: '知道了。宗学之事，着宗人府会同内务府详议具奏。服制旧例，朕自有区处。',
+    mize: '密报：允禩府中近日所聚之人益发不类，内务府某员、宗室数人日夜聚集，语多怨望。\n\n又，先帝在位时，允禩于诸王中居第二，仪节每从尊今皇上御极，允禩居第三。臣尝闻其语：「从前在二阿哥前，如今在什么地方？」其言可见。\n\n再，宗室服制一事，实关体统，然必有不服者；皇上若令宗人府自为裁抑，则允禩必谓皇上轻宗室。此中机栴，全在皇上之一字。',
+    options: [
+        { label: '优容宗室，增学养士', hint: '以柔克刚，先收人心', effects: { publicSupport: 4, 'officials.yinsi': 12, officialMorale: 5, treasury: -20, mercy: 8 }, log: '扩充宗学，给宗室贫困者以钱米。' },
+        { label: '厉行服制，裁减宗室用度', hint: '削其势而结怨', effects: { imperialPower: 12, 'officials.yinsi': -20, treasury: 15, officialMorale: -5, severity: 6 }, log: '严定宗室服制，裁减岁赐。' },
+        { label: '密加察访，先事防范', hint: '防患于未然', effects: { imperialPower: 6, 'officials.yinsi': -6, secretMemorials: 2 }, log: '允禩府中所聚之人，具名密录。' },
+        { label: '服制之事交宗人府自议，而以密折监听其议', hint: '知情方略——以其人之手削之', needMize: true, effects: { imperialPower: 14, 'officials.yinsi': -14, officialMorale: 6, secretMemorials: 2 }, log: '宗室服制交宗人府自议，皇上密听其辞。' }
+    ]
+},
+
+/* ===================== 雍正四年 ===================== */
+{
+    year: 1726, month: 4,
+    from: '大学士 张廷玉 等',
+    title: '为允禩悖逆情形奏请处置事',
+    summary: '宗室悖逆情形已明，请明正典刑，以正名分。',
+    body: '臣张廷玉谨奏：\n\n皇上登极四载，宗政紊乱，悖逆之渐已非一日。臣等奉旨查核，情形如下：\n\n一、允禩于康熙末年，串联内外，妄称「二阿哥当立」。及皇上即位，允禩以「与我而已」之语凌人，二阿哥、十四王等在旁，闻之凛然。\n\n二、允禩在康熙末年八月，私向咸安宫行礼，为侍卫所阻。\n\n三、先帝大行，禩在诸王中仪节逾制；又于畅春园擅奏事务，同列诸王皆无。\n\n四、允禩年长，赐死不当，请皇上量情处置。\n\n臣等以为，名分不正，则上下无以自立。请旨明正典刑。\n\n伏乞圣裁。',
+    zhupi: '知道了。诸王的事，朕自有处置。你且退下。',
+    mize: '密报：允禩府中家人逾数十人，私与内外官往来，其出京私谒者数十家，皆有馈遗。又有僧人、道士出入其门。侍卫某因不肯私谒允禩，为其所恨。\n\n臣按：允禩之骄，已非一日。皇上若以恩典结之，彼益无所忌惮；若遽加显戮，恐宗室寒心。宜先削其党与羽翼，再定其名分。',
+    options: [
+        { label: '削籍夺爵，圈禁宗人府', hint: '剪除最大隐患，宗室震恐', effects: { imperialPower: 22, 'officials.yinsi': -40, officialMorale: 14, publicSupport: 6, severity: 10 }, log: '允禩削去王爵，改名阿其那，圈禁宗人府。' },
+        { label: '留其爵而夺其权，迁居京郊', hint: '留一分余地', effects: { imperialPower: 12, 'officials.yinsi': -20, officialMorale: 5, mercy: 6 }, log: '允禩爵位未夺，迁居京郊，听候发落。' },
+        { label: '暂留再观', hint: '养虎为患', effects: { imperialPower: -10, 'officials.yinsi': 15, secretMemorials: 1 }, log: '宗政之议暂缓，允禩气焰复炽。' },
+        { label: '先劾其党与私谒之家，削羽翼而后定其名分', hint: '知情方略——次第剪除', needMize: true, effects: { imperialPower: 20, 'officials.yinsi': -34, officialMorale: 12, publicSupport: 4, severity: 8, secretMemorials: 2 }, log: '允禩私谒之家先被劾究，其党羽尽剪。' }
+    ]
+},
+{
+    year: 1726, month: 10,
+    from: '云贵总督 鄂尔泰',
+    title: '为经理苗疆并请改土归流事',
+    summary: '土司骄横不法，苗民苦甚，请于滇黔要害之地改土归流。',
+    body: '臣鄂尔泰谨奏：\n\n臣到任贵，访查苗疆情形。滇东、黔南各土司世守其土，子孙承袭，悉以私刑断狱，民命系于其手，冤无所申。\n\n有土司自雍正元年至今，擅杀人命二十余起，未经有司勘问；其地田赋本已入册，今复自收三五成，名曰「火耗」。\n\n臣以为非改土归流不可。惟其势须徐图：\n\n一、先于要害之地改设流官，量其地险，置兵设汛；\n二、苗民通言语者，循例编入民籍，与土司不相干属；\n三、土司愿改流者，量予优叙，许其子弟仍为土职；\n四、不愿改者，俟其罪状发露，再行处置。\n\n伏乞圣裁。',
+    zhupi: '所奏是。改土归流，关系百年之治，务要经理得当，不可卤莽。卿与杨名时议定章程，朕批行之。',
+    mize: '报：鄂尔泰在滇锐意有为，然性刚自用，与云贵提督杨名时意见龃龉。臣观二人皆非庸才，然同城而不同心，恐败事。\n\n又：土司中有一名安某，暗通准噶尔，已三年矣。臣所报即彼暗通之处。',
+    options: [
+        { label: '准其改土归流，分期推进', hint: '耗时多年，成效深远', effects: { 'reforms.tuigu': 25, publicSupport: 8, officialMorale: 10, 'officials.eertai': 18, treasury: -30 }, log: '滇黔要害之地改设流官，苗疆渐安。' },
+        { label: '先办土司不法者，以罪取证', hint: '取证而后行，风险小', effects: { 'reforms.tuigu': 12, publicSupport: 4, treasury: -10, 'officials.eertai': 8, severity: 4 }, log: '先办不法土司数人，苗民始信朝廷无偏私。' },
+        { label: '责其与提督和衷共济，毋得各行其是', hint: '先理人事', effects: { 'reforms.tuigu': 6, officialMorale: 6, 'officials.eertai': -5, mercy: 4 }, log: '鄂尔泰、杨名时奉旨会同办理，龃龉稍解。' },
+        { label: '密拿通敌之土司安某，以其罪证服众', hint: '知情方略——以敌国为罪证', needMize: true, effects: { 'reforms.tuigu': 24, publicSupport: 9, officialMorale: 10, severity: 8, 'officials.eertai': 14, secretMemorials: 2 }, log: '通敌土司安某先被拿办，苗疆归流之议遂成。' }
+    ]
+},
+/* ===================== 雍正五年 ===================== */
+{
+    year: 1727, month: 3,
+    from: '浙江巡抚 李卫',
+    title: '为整饬浙省吏治事',
+    summary: '浙省胥吏把持文移、官绅相结，请定清查之法。',
+    body: '臣李卫谨奏：\n\n臣初莅浙省，见吏治之坏胜于他省。文书出于书办之手，钱粮操于衙役之手；州县官到任三月，案牍已积盈尺，尽为胥吏所卖。\n\n又浙人多业讼，讼师与官吏相结，一词到手，动辄千缗，民间受累。臣欲除弊而苦无良吏。\n\n臣请：\n\n一、清查省城各衙门积案，限半年清理；\n二、严禁吏胥讹索，拏获者照例枷号；\n三、州县每月具报钱粮出入，备御览；\n四、简选书吏，取年富力强者，考其字画，给以工食，岁终考绩。\n\n臣才力平常，惟有一腔为国之心，伏乞圣裁。',
+    zhupi: '好。卿既有此心，尽管放胆去做。吏治一门，朕全权付卿。只一件，不要株连无辜，妄加罪罚。',
+    mize: '密报：李卫到浙，一改官场旧习，士人初不服，其后畏其严，怨声渐息。惟李卫为人自用，好与同僚争，浙省臬司、藩司皆与龃龉；又其护短，府中胥役倚其势甚骄，有殴人者，府县不敢问。\n\n臣以为：皇上以吏治付李卫，是得其长；然其短在护短。若不预为防，流弊必自其门下出。',
+    options: [
+        { label: '准其清查，严办讹索胥吏', hint: '吏治肃清，然李卫树敌', effects: { officialMorale: 20, publicSupport: 7, treasury: 15, integrity: 14, 'officials.liwei': 12 }, log: '浙省积案清理，胥吏讹索之风为之一变。' },
+        { label: '准其行事，并令巡抚互相节制', hint: '防一家独大', effects: { officialMorale: 12, publicSupport: 4, 'officials.liwei': -4 }, log: '李卫清查胥吏，同时各省巡抚一体查办。' },
+        { label: '令其稍缓，先训后惩', hint: '手段偏软', effects: { officialMorale: 6, publicSupport: 3, treasury: -5, mercy: 6 }, log: '浙省积案分限清理，吏胥先行训诫。' },
+        { label: '密授机宜，先查其府中胥役之横者，以清其源', hint: '知情方略——治其门内', needMize: true, effects: { officialMorale: 18, publicSupport: 8, integrity: 20, 'officials.liwei': 10, severity: 4, secretMemorials: 1 }, log: '李卫府中豪横胥役先遭查办，浙省吏治乃清。' }
+    ]
+},
+{
+    year: 1727, month: 8,
+    from: '理藩院尚书 鄂尔达 等',
+    title: '为请设驻藏大臣并定藏地经理事宜事',
+    summary: '藏地需大员经理，请遣正卿二人驻藏，办理一切事务。',
+    body: '臣等谨奏：\n\n藏地自达赖、班禅圆寂后，噶尔丹策零方蠢蠢欲动。此地虽隶版图，而政教之柄操于胡土克图之手，向无大员经理，恐生事端。\n\n臣等议：请遣正卿二人赴藏，一正一副，率兵三千，分驻前藏、后藏，办理一切事务；噶尔丹策零遣使来朝者，许其贸易，与以封号，俾其安分。\n\n所需经费约银二十万两，人马由青海、西宁拨给。\n\n伏乞圣裁。',
+    zhupi: '所奏是。藏地关系边防，着即遣正卿二人驻藏，所需经费如数拨给，务令经理得法。',
+    mize: '密报：准噶尔噶尔丹策零遣使求和，所求甚奢，索额鲁特、克什克特之地。臣等以为，此乃缓兵之计，许其贸易而不可许其地。惟使臣往来日密，恐边民与之私贩军械。\n\n又，藏地情形复杂，遣京员二人，未必熟悉；不如遣有边务经验而能谦抑者。',
+    options: [
+        { label: '照议，设驻藏大臣二人', hint: '经营西藏，费用不菲', effects: { imperialPower: 14, militaryStrength: 8, treasury: -35, publicSupport: 3 }, log: '遣正卿二人驻藏，前藏后藏各置汛兵。' },
+        { label: '遣官而减兵，先观其变', hint: '省钱省兵', effects: { imperialPower: 6, militaryStrength: 3, treasury: -15 }, log: '遣官驻藏，兵额从减。' },
+        { label: '许贸易而不遣驻藏大臣', hint: '省钱，但失先手', effects: { treasury: 10, militaryStrength: -10, imperialPower: -8 }, log: '许准噶尔通商，未遣驻藏大臣。' },
+        { label: '准遣，而以熟悉边务者为正卿，不以京员充数', hint: '知情方略——择人重于择制', needMize: true, effects: { imperialPower: 16, militaryStrength: 10, treasury: -30, publicSupport: 3, integrity: 8 }, log: '驻藏大臣简派边务老手，藏地经理乃得其人。' }
+    ]
+},
+
+/* ===================== 雍正六年 ===================== */
+{
+    year: 1728, month: 7,
+    from: '福建巡抚 蓝鼎元',
+    title: '为奏请设巡台御史事',
+    summary: '台湾孤悬海外，番汉杂处，请设巡台御史巡历弹压。',
+    body: '臣蓝鼎元谨奏：\n\n臣前任台湾道，遍历台疆，谨陈其要：\n\n一、台地幅员千里，隶福建一府管辖，官少吏弱，鞭长莫及；\n二、汉番杂处，番社未化者十之七，近年番人出山，扰及汉民；\n三、官以三年为满，交代不清，贪墨自肥，其去后亦有为民称善者；\n四、更有一种陋规，官取于番，吏增其数，番民受害最烈。\n\n臣以为非设巡台御史不可。御史秩卑而权重，可巡历全省、纠劾官吏，且不预地方钱粮，不至与抚臣争权。\n\n伏乞圣裁。',
+    zhupi: '所奏是。台湾孤悬海外，非有大员巡察不足以肃清奸弊。着于台湾设巡台御史二人，以道、府兼衔巡历，按年具奏。',
+    mize: '密报：台湾知府某，名为出巡安抚，实则按户摊派，每甲派银二两，番民苦之。番社耆老曾有呈文，为胥吏所匿。臣又闻：巡台御史之设，皇上之意已定，今尚未行，而台中已风闻，人人自危。\n\n臣以为：宜先遣密使访查实情，俟御史到任，一并究办，方不至有司闻风先改。',
+    options: [
+        { blindRisk: true, label: '准设巡台御史二人，彻查积弊', hint: '台岛肃清，怨及一时', effects: { publicSupport: 7, 'reforms.tuigu': 15, treasury: -10, officialMorale: 8, integrity: 12 }, log: '台湾设巡台御史，陋规之弊得除。' },
+        { label: '准设御史，先查官不查民', hint: '稳妥，积弊除而不尽', effects: { 'reforms.tuigu': 8, publicSupport: 3, officialMorale: 5, mercy: 5 }, log: '巡台御史到任，先劾不法官吏。' },
+        { label: '暂不设御史，先遣大员查案', hint: '走一步看一步', effects: { 'reforms.tuigu': 4, treasury: -5 }, log: '遣大员赴台查案，御史之议暂缓。' },
+        { label: '先遣密使访查，罪状既实，然后设御史并劾之', hint: '知情方略——先取证，后设官', needMize: true, effects: { publicSupport: 8, 'reforms.tuigu': 16, officialMorale: 10, integrity: 16, severity: 6, secretMemorials: 1 }, log: '密使先得台中实情，御史至，罪案并劾。' }
+    ]
+},
+{
+    year: 1728, month: 11,
+    from: '大学士 张廷玉',
+    title: '为吕留良著述及曾静张某事',
+    summary: '湖南曾静张某引吕留良著述投递营中，请旨查办。',
+    body: '臣张廷玉谨奏：\n\n湖南考生曾静、张熙，投书川陕总督岳钟琪营中，劝其「成佛作祖」，并引吕留良所著《自知录》语，妄称「华夷之辨」甚严，语多悖逆。曾静、张熙现已拿获，解送京师。\n\n臣查吕留良，浙江崇德人，讲学著书，门徒甚众。已故。著书中有「诛五百万也胜似一百万」等语，为门人曾静所诵。\n\n此非一人一事，乃著书立说、惑世坑人。臣请：\n\n一、严查吕留著述及门徒，一并究办；\n二、张熙等解京严讯；\n三、查办不可株连，不可滥及无辜；\n四、书板焚毁，令地方官查禁销毁。\n\n伏乞圣裁。',
+    zhupi: '知道了。吕留良著述，着即严查销毁。其门徒曾静等，押解来京讯问，毋得株连无辜。此案重大，卿须亲自督办。',
+    mize: '密报：此案牵动江浙士林，江南士子人心惶惶。臣闻有人劝皇上「从宽」以安人心，亦有人劝「从严」以绝后患。臣以为：此案之要，不在一人之生死，而在诸王之态度——宗人府诸王，多有以此案为言者。\n\n又，此案若株连太广，则读书人皆闭口不言，皇上此后所得者，将只有告发之词。',
+    options: [
+        { blindRisk: true, label: '从严办理，销毁著述，追究门徒', hint: '绝祸根，然江南人心不安', effects: { integrity: 4, imperialPower: 16, officialMorale: -10, publicSupport: 3, severity: 14, 'officials.zhangTingyu': 10 }, log: '吕留良著述悉数销毁，门徒严办。' },
+        { label: '审慎办理，诛其身而宽其党', hint: '取折中之策', effects: { imperialPower: 8, publicSupport: 2, officialMorale: 3, mercy: 8 }, log: '曾静等下狱论罪，株连者从宽。' },
+        { label: '交地方查办，不复株连', hint: '最宽之策', effects: { publicSupport: 7, imperialPower: -6, officialMorale: -6, mercy: 12 }, log: '吕留良案交地方查办，从宽完结。' },
+        { label: '诛首恶、焚书板，而明诏各省「不得株连」以安士林', hint: '知情方略——宽其党以收人心', needMize: true, effects: { imperialPower: 14, publicSupport: 6, officialMorale: 6, severity: 6, 'officials.zhangTingyu': 8 }, log: '曾静等严办，而诏令各省毋得株连，江南士林稍安。' }
+    ]
+},
+
+/* ===================== 雍正七年 ===================== */
+{
+    year: 1729, month: 6,
+    from: '山东巡抚 金世宗 等',
+    title: '为请颁摊丁入亩并定地丁一册事',
+    summary: '丁银摊入田赋，贫民无丁则无税，请天下一体遵行。',
+    body: '臣等谨奏：\n\n我朝定鼎，滋生人丁永不加赋，此圣祖仁皇帝之仁政也。然丁银虽不加，而丁银之额仍在，其徭役仍派之于人，虽无增赋之名，实有增役之实。\n\n且丁银与田赋一经摊归，贫苦无田之民，岁岁完纳，名为不加赋，实不免困。臣等议：\n\n一、将丁银摊入田赋之内，按亩分派；\n二、无论男女，一概编入坊厢；\n三、此后生出之丁，永不加赋；\n四、地丁一册之法，通行各省，岁终造报户口田亩之数。\n\n伏乞圣裁。',
+    zhupi: '所奏是。丁银摊入田赋，贫民得免，着颁行各省，永为定例。',
+    mize: '密报：摊丁入亩，行之不难，难在有田之家。以往丁银由无地者分摊，今改为有田者分摊，田多者出银多，故乡绅必怨。臣闻河南、山西已有士绅联名呈诉。\n\n又，此政若行，逃户、匿丁之弊自解，而保甲、里甲之额亦须重定；地方官必借重定之机，趁机摊派。皇上宜明定「摊丁之银不得别派」之条，堵其口实。',
+    options: [
+        { blindRisk: true, label: '颁行天下，无丁不纳', hint: '最彻底，触动人多', effects: { 'reforms.tandin': 30, publicSupport: 10, officialMorale: -8, treasury: 10, mercy: 12, secretMemorials: 1 }, log: '摊丁入亩颁行各省，编户之数岁增。' },
+        { label: '先于无丁州县试行，再行天下', hint: '先易后难', effects: { 'reforms.tandin': 16, publicSupport: 6, officialMorale: 3 }, log: '摊丁入亩先于无丁之州县试行。' },
+        { label: '行于贫多田少之省，暂缓东南', hint: '避硬骨头', effects: { 'reforms.tandin': 8, publicSupport: 3, officialMorale: -3 }, log: '摊丁入亩先行于贫瘠之省，东南暂缓。' },
+        { label: '颁行，并明定「摊丁银不得别派」一条以杜浮收', hint: '知情方略——先堵旁路', needMize: true, effects: { 'reforms.tandin': 32, publicSupport: 12, officialMorale: 6, treasury: 12, mercy: 10, integrity: 12, secretMemorials: 1 }, log: '摊丁入亩颁行，并定「不得别派」之条，浮收之弊自减。' }
+    ]
+},
+{
+    year: 1729, month: 9,
+    from: '怡亲王 允祥',
+    title: '为西陲军务请设军机房事',
+    summary: '西北用兵，文书由内阁封缄迂缓，请于隆宗门内设军机房。',
+    body: '臣允祥谨奏：\n\n西陲用兵，军事文书由内阁代为封缄，辗转迟滞。臣与大将军等筹议，於隆宗门内设军机房，选内阁中书、军机章京若干，缮写军令、密旨，径行发往。前后五日可至，最速者三日至。\n\n此举不过为便于办事，非欲立一衙门。凡军机大臣，皆由皇上亲选；一切文书仍由内阁发出，不敢擅专。\n\n伏乞圣裁。',
+    zhupi: '所奏是。军机处之设，原不过为办理军务敏捷，并无别用。朕将大小官员，一概交伊等权宜。',
+    mize: '密报：怡亲王病势沉重，时时昏迷，然以军务为念，夜不释卷。臣查其子弘昼已有风流之习，行为不检，时人侧目。\n\n又，军机处之设，不过抄写邸报、随旨写谕耳，廷寄不过由内阁传出之别耳，此众人共知者也。皇上宜自明其无他用，使内外释然；否则臣恐流言四起，为权臣之口实。',
+    options: [
+        { label: '准设军机房，简选谨密之臣', hint: '军令疾如风，权柄更重', effects: { imperialPower: 15, militaryStrength: 14, 'officials.yunxiang': 15, officialMorale: 6 }, log: '隆宗门内设军机房，军令朝发夕至。' },
+        { label: '准设，但一切仍由内阁会签', hint: '防军机权重', effects: { imperialPower: 8, militaryStrength: 8, officialMorale: 4 }, log: '军机房设，文书仍由内阁会签。' },
+        { label: '缓设，俟西事平定再议', hint: '稳而进', effects: { militaryStrength: -6, imperialPower: -4 }, log: '军机房之议暂缓。' },
+        { label: '准设，并明诏「军机处不过办事之便，并无别用」', hint: '知情方略——先自证其公', needMize: true, effects: { imperialPower: 16, militaryStrength: 14, officialMorale: 10, publicSupport: 4, 'officials.yunxiang': 12 }, log: '军机房既设，明诏其无他用，流言遂息。' }
+    ]
+},
+
+/* ===================== 雍正八年 ===================== */
+{
+    year: 1730, month: 3,
+    from: '大学士 张廷玉',
+    title: '为请严定士民一体当差并清查各省亏空事',
+    summary: '绅衿仍不充当差，请通饬各省一体遵行，并令清核亏空。',
+    body: '臣张廷玉谨奏：\n\n皇上前降谕旨：士民一体当差。此一旨未行，而天下已传诵。\n\n在直隶、河南、山东，绅士则仍不充差。臣查其故：一则州县畏其威势，一则积欠之户藉以拖延。臣以为，此宜自上而下，一经严旨，不许展缓。\n\n臣又请：凡文武官员之子孙，一体编入坊厢，与庶民同例；其仕宦之家，除一子仍袭原荫外，余子归农。\n\n再者，饬查各省仓库、钱粮、驿传、亏空，令藩臬道三司互结，用其清。\n\n伏乞圣裁。',
+    zhupi: '所奏是。士民一体当差，朕意已决，着各省巡抚严加奉行，敢有阳奉阴违者，朕实查之。',
+    mize: '密报：各省亏空之数，江南居其半。臣查其源，官多以报销核销为名，任意虚填。皇上若不复查，岁出之数必逾岁入之数，他日有事，仓储不给。\n\n又，士民一体当差最难行于江苏、浙江，然非此二省先改，他省必借口「彼处尚行旧例」而观望。',
+    options: [
+        { label: '严旨推行，并清查各省亏空', hint: '雷厉风行，可得实数', effects: { 'reforms.tuigu': 22, publicSupport: 7, officialMorale: 8, treasury: 30, integrity: 14, secretMemorials: 1 }, log: '士民一体当差通行各省，各省亏空限期清理。' },
+        { label: '只行当差，亏空缓查', hint: '分步推进', effects: { 'reforms.tuigu': 14, publicSupport: 4, treasury: 8 }, log: '士民一体当差通行各省，亏空之查暂缓。' },
+        { label: '令先核款项，后行差役', hint: '以利动之，减少阻力', effects: { 'reforms.tuigu': 10, treasury: 20, officialMorale: 6, mercy: 5 }, log: '各省先核款项，明确当差之数。' },
+        { label: '先于江苏、浙江破例举办，一省成功则天下从之', hint: '知情方略——先难后易', needMize: true, effects: { 'reforms.tuigu': 24, publicSupport: 9, officialMorale: 10, treasury: 15, integrity: 10, severity: 6, secretMemorials: 1 }, log: '苏浙二省先办当差，天下闻风而行。' }
+    ]
+},
+{
+    year: 1730, month: 10,
+    from: '云贵总督 鄂尔泰',
+    title: '为云南苗疆情形及改土归流成效奏',
+    summary: '改土归流三载，土司多已归顺，请定长久之制与经费。',
+    body: '臣鄂尔泰谨奏：\n\n改土归流三载，滇东黔南共改土归流六十余处，设府厅州县二十有奇，安插苗民五千余户。\n\n昔之苗民，纳粮则私加火耗，词则投土司，官不过问。今则官收其赋、刑有专司、苗民得与汉民同编，数年之内，苗疆大安。\n\n然臣不敢恃功：\n\n一、已改之土司，其旧日爪牙多有仍在暗处煽惑；\n二、新设流官，伍保、里长皆系土司旧人，不可深信；\n三、经费出自公帑，岁支渐增，若不另筹其源，他日难以为继。\n\n臣请以耗羡所得之三成专供苗疆经费，俾其长久。\n\n伏乞圣裁。',
+    zhupi: '所奏是。改土归流，朕从不计一时之功，只要十年之后苗民安堵。经费即如卿议，耗羡三成划归苗疆，不得挪移。',
+    mize: '密报：鄂尔泰之功，皇上信之，然其性骄，与督抚同者多不能久处。臣闻云南、贵州二省因一款银归属，鄂尔泰与两省巡抚争讼年余，至今未决。此事若不早断，苗疆之政必受牵累。\n\n又：新设流官之中，汉人多不谙苗俗，苗民怨之；此皇上所当知。',
+    options: [
+        { label: '准行，并断鄂尔泰与黔抚之争', hint: '保改革，防内耗', effects: { 'reforms.tuigu': 18, publicSupport: 8, officialMorale: 10, 'officials.eertai': 10, treasury: -15 }, log: '苗疆经费定额专给，黔抚之讼得断。' },
+        { label: '准行，鄂尔泰专主其事', hint: '效率高，风险高', effects: { 'reforms.tuigu': 22, 'officials.eertai': 15, officialMorale: -5, publicSupport: 4, severity: 4 }, log: '苗疆之事悉听鄂尔泰专主。' },
+        { label: '另简贤员分抚，削鄂尔泰之权', hint: '换将', effects: { 'reforms.tuigu': 8, 'officials.eertai': -20, officialMorale: 6 }, log: '黔抚另简贤员，苗疆之政分归两省。' },
+        { label: '断其争而不分其权，并令新任流官皆谙苗俗者为之', hint: '知情方略——折中而补其短', needMize: true, effects: { 'reforms.tuigu': 22, publicSupport: 10, officialMorale: 10, 'officials.eertai': 12, mercy: 8, treasury: -10 }, log: '苗疆经费专给，流官改用谙苗俗者，苗疆大安。' }
+    ]
+},
+
+/* ===================== 雍正九年 ===================== */
+{
+    year: 1731, month: 6,
+    from: '陕西总督 岳钟琪',
+    title: '为西陲预警并请预筹粮械事',
+    summary: '准噶尔部渐整军备，请预筹粮械、坚壁清野。',
+    body: '臣岳钟琪谨奏：\n\n准噶尔部自去秋以来，商胡、驼马渐集于额鲁特一带，其众十万，粮械俱备。\n\n臣先已密奏，今据探报，其遣使来朝，索额鲁特、克什克特之地，词甚倨傲。臣以为，此来为缓我之计。\n\n臣请预筹三事：\n\n一、哈密、吐鲁番、甘肃各城，增兵筑城，储粮备薪；\n二、内地沿边，乡民归并村寨，坚壁清野；\n三、闭关不与通市，以绝其侦探。\n\n若彼果来，来则击之。',
+    zhupi: '所奏是。预筹诸事，朕嘉汝之忠。但闭关之议，尚可斟酌——一纸绝之，恐激其志。着户部先备粮饷，兵部先核器械。',
+    mize: '密报：准噶尔探营已达我边二千里，而沿途一无可知。臣查此非我不察，乃无人肯实报；边将多以「据称」二字塞责，粮饷则虚冒。\n\n又，甘肃沿边诸营，其额数与实数相去甚远，缺额之饷，往往照额支销，一无下落。皇上若不先核额，仓廪虚耗。',
+    options: [
+        { label: '断不闭关，且增兵筑城，坚壁清野', hint: '示以强硬，需大费帑', effects: { militaryStrength: 16, treasury: -70, publicSupport: -6, imperialPower: 6 }, log: '沿边增兵筑城，坚壁清野，边备大举。' },
+        { label: '闭关绝市，同时密令诸将整军', hint: '以时间换空间', effects: { militaryStrength: 8, treasury: -35, imperialPower: 4 }, log: '闭关不与通市，诸边密整军实。' },
+        { label: '照常互市，以观其变', hint: '省帑而失先机', effects: { treasury: 15, militaryStrength: -10, imperialPower: -6 }, log: '西陲照常互市，边情未增警惕。' },
+        { label: '闭关，并先核各省营额，缺者补、虚者黜', hint: '知情方略——清虚额以实军', needMize: true, effects: { militaryStrength: 18, treasury: -45, officialMorale: 12, integrity: 16, secretMemorials: 1 }, log: '甘肃营额核实，缺额补足、虚冒者黜，边军始实。' }
+    ]
+},
+{
+    year: 1731, month: 11,
+    from: '大学士 张廷玉',
+    title: '为西陲军需及请用廷寄密旨事',
+    summary: '军兴日久，度支日增，请定专款并请以廷寄直达将帅。',
+    body: '臣张廷玉谨奏：\n\n西陲军兴以来，度支日增，部库所出已逾四百万两，而西运之费居其半。\n\n臣以为，用兵之道，饷胜于兵。若饷不继，虽百万之师无以行。臣请：\n\n一、于各省加派之外，另留京饷十五万两，专备西征；\n二、军机处行廷寄，直达行军将帅，不经内阁，手续从速；\n三、军需报销，着该部严核，毋得滥销。\n\n伏乞圣裁。',
+    zhupi: '所奏是。廷寄之事，朕已有旨。军机大臣，你们可放手去办。',
+    mize: '密报：西运之费，半为沿途州县所侵蚀。臣查粮台报销，运一石至边，费银七两，而实到不及五石。此中大半入私。若不严究，帑银虚掷。\n\n又：廷寄直达将帅，此制一立，则内阁之权归军机，久之恐成尾大不掉。此皇上所当自留意者。',
+    options: [
+        { label: '严核报销，追赔侵吞', hint: '得银而不失将心', effects: { treasury: 35, militaryStrength: 8, officialMorale: 12, integrity: 16, 'officials.zhangTingyu': 8 }, log: '西运军需严核，追赔沿途侵蚀之银。' },
+        { label: '姑宽不究，先保军行', hint: '权宜之策', effects: { militaryStrength: 14, treasury: -25, officialMorale: -8 }, log: '军期紧迫，军需报销从宽。' },
+        { label: '另遣大员专理军需', hint: '换手即清', effects: { treasury: 20, militaryStrength: 6, officialMorale: 8, secretMemorials: 1 }, log: '另遣大员专理西运军需。' },
+        { label: '严核报销，并定「廷寄与内阁文书并行、不得废内阁」之条', hint: '知情方略——既行其便，又防其权', needMize: true, effects: { treasury: 30, militaryStrength: 12, officialMorale: 12, integrity: 12, 'officials.zhangTingyu': 8 }, log: '廷寄与内阁并行，军需严核追赔。' }
+    ]
+},
+/* ===================== 雍正十年 ===================== */
+{
+    year: 1732, month: 6,
+    from: '陕西总督 岳钟琪',
+    title: '为准噶尔大举入寇并急请援兵事',
+    summary: '准噶尔十余万众越境犯西宁，鏖战告急，请发京兵内帑。',
+    body: '臣岳钟琪谨奏：\n\n本年准噶尔部噶尔丹策零果率众十余万，自西北方向深入，直抵我西宁、宗哲、格尔术一带。臣与副将杨应琚等分路迎击，于宗哲大败之，斩获甚众。\n\n然敌众我寡，鏖战竟日，我军伤亡亦重。准噶尔已转而西趋，直扑西宁。臣与杨应琚合兵坚守，环城鏖战，胜负未分。\n\n臣请：调京师火器营、绿营兵四千，遣轻骑昼夜兼程驰援；并请发内帑以赏军士，将士离心之际，非厚赏不能久战。\n\n兵事瞬息，请速赐敕书。',
+    zhupi: '所奏是。准噶尔敢如此，朕必以方略待之。援兵即日发出，内帑即发，火器军械毋惜。卿等勉力，朕当为卿等之后盾。',
+    mize: '密报：臣按：宗哲一战，我军斩获数千，而准噶尔实亡者不及千人，其中大半为我军驱赶之虏民。战报多饰，将帅好名。\n\n又，西宁城中运使丁氏专权，督饷严酷，士卒怨之。准噶尔未至，已有一半军心浮动。\n\n又，皇上若以京兵四万驰援，则准噶尔必引众西走，恐我师深入而粮不继。此中机宜，惟皇上与大将军决之。',
+    options: [
+        { blindRisk: true, label: '尽发京畿精兵驰援，并厚赏军士', hint: '救燃之急，靡费甚巨', effects: { militaryStrength: 22, treasury: -90, imperialPower: 8, officialMorale: 12, severity: 4 }, log: '京畿劲旅驰援西宁，内帑犒赏三军。' },
+        { label: '调兵数万，由将帅自行节制', hint: '将权下移，有尾大不掉之虞', effects: { militaryStrength: 14, treasury: -55, imperialPower: -6, 'officials.longkodo': 8 }, log: '援兵赴西，敕令诸将便宜行事。' },
+        { label: '坚守不战，闭关以待其敝', hint: '耗尽敌力，代价是失地失民', effects: { integrity: 4, militaryStrength: 4, publicSupport: 4, treasury: -40, severity: 6 }, log: '西宁闭关固守，坚壁清野。' },
+        { label: '先撤丁氏、散怨卒，以援兵当其锋而勿追深入', hint: '知情方略——先固内部再谈战', needMize: true, effects: { militaryStrength: 18, treasury: -60, officialMorale: 16, publicSupport: 3, integrity: 12, secretMemorials: 1 }, log: '西宁运使丁氏被劾罢，援兵至而不追，敌气自衰。' }
+    ]
+},
+{
+    year: 1732, month: 11,
+    from: '云贵总督 鄂尔泰',
+    title: '为滇南赈恤并请颁土司归流期限事',
+    summary: '滇南大旱，苗民乏食，请赈济并定土司归流之期。',
+    body: '臣鄂尔泰谨奏：\n\n本年滇南大旱，米价腾贵三倍，苗民乏食者数十万。臣已开仓赈济，饬各府州县设厂施粥，并准以工代赈，兴修水利。\n\n然仓储有限，赈济须请增拨。又黔省已改土归流之六十余处，请定期限：限内愿改者许其保留土职，仍纳赋役；限外仍恃险不法者，悉照内地例治罪。\n\n臣以为宽严之间，须有定则。\n\n伏乞圣裁。',
+    zhupi: '所奏是。赈恤之事，着即拨银三十万两，并令各省常平仓核实出借。土司归流之限期，着即颁行，毋得再缓。',
+    mize: '密报：云南之旱，起于去秋少雨，今夏又值沱雨；兼之九龙井盐场纠纷未结，盐价腾踊，米益贵。臣又闻：黔中苗民有「以夷制夷」旧案，官府不察，一味剿抚并用，恐激成他变。\n\n又，苗疆以工代赈，所修皆水利；而彼中苗民，不谙工价，若无总管约束，必生冒领。',
+    options: [
+        { label: '准其赈恤并颁限期，苗疆从严', hint: '救急兼立制', effects: { publicSupport: 11, 'reforms.tuigu': 15, treasury: -40, 'officials.eertai': 10, officialMorale: 6, severity: 5 }, log: '滇南赈济发粟，苗疆归流限期颁行。' },
+        { label: '大发帑银赈济，归流从缓', hint: '先救人', effects: { publicSupport: 10, treasury: -55, 'reforms.tuigu': 6, 'officials.eertai': 6, mercy: 10 }, log: '发内帑三十万两赈滇南，归流之限暂缓。' },
+        { label: '令地方自筹，止给常平仓米', hint: '省钱', effects: { publicSupport: -12, treasury: -10, 'reforms.tuigu': 8, severity: 4 }, log: '滇南就常平仓赈济，赈务不继。' },
+        { label: '先理九龙井盐场，盐价一平则米价自落', hint: '知情方略——先解其结', needMize: true, effects: { publicSupport: 12, treasury: -25, 'reforms.tuigu': 12, 'officials.eertai': 8, integrity: 12, mercy: 8 }, log: '九龙井盐场争讼得决，滇南盐米之价俱平。' }
+    ]
+},
+
+/* ===================== 雍正十一年 ===================== */
+{
+    year: 1733, month: 8,
+    from: '刑部尚书 裴景馥 等',
+    title: '为吕留良曾静案拟罪事',
+    summary: '大逆之案拟罪已定，请旨核准处决之式。',
+    body: '臣等谨奏：\n\n吕留良著述一案，著书已悉数销毁。门徒曾静、张熙及陈世运等七人，审拟凌迟处死；沈光世等发往军台；其余家属及徒党，概免追究。\n\n曾静投递书一案，虽其本人有可原之情，然其书传播于外，煽惑多人，非一人一时之事。若不严办，则后患无穷。\n\n臣等反复筹酌：\n\n一、曾静等，照律凌迟处死，枭首示众；\n二、张熙等，律应收监，俟减等；\n三、亲属免死，酌给口粮田亩，使其自活；\n四、仍许曾静家属与吕氏后人应试，一体除籍开科。\n\n伏乞圣裁。',
+    zhupi: '此案重大，朕亲自阅牍。着照所拟，曾静、张熙等凌迟处死，枭首示众。亲属一概免罪，不在株连之列。',
+    mize: '密报：曾静家属已远出湖南，寄匿江浙、四川等处。臣以为，若不严加缉捕，则律法之设，反为宵小所笑。\n\n又：此案株连之议，朝中分为两派。张廷玉主严，刑部官多主宽。年羹尧案未了，天下恐疑朝廷自相矛盾。\n\n又：江西陆生楠所著《存疑》一书，其书中多有诋毁本朝之语，与此案相类。皇上若不并究，则人以为宽；并究则人以为酷。',
+    options: [
+        { blindRisk: true, label: '照拟严办，立威于天下', hint: '震慑有力，江南士林寒心', effects: { integrity: 4, imperialPower: 15, publicSupport: 4, officialMorale: -12, severity: 16, 'officials.zhangTingyu': 8 }, log: '曾静、张熙等凌迟枭首，律法森然。' },
+        { label: '杀一儆百，余者从宽发遣', hint: '折中', effects: { imperialPower: 8, publicSupport: 1, officialMorale: 2, mercy: 6 }, log: '曾静等处死，余党从宽发遣。' },
+        { label: '缓刑一年，以观舆论', hint: '失律法之威', effects: { publicSupport: 6, imperialPower: -10, officialMorale: -8, mercy: 12 }, log: '此案暂行，俟明年再拟。' },
+        { label: '并究陆生楠《存疑》一案，使之无可遁饰', hint: '知情方略——不留后患', needMize: true, effects: { integrity: 4, imperialPower: 18, publicSupport: 5, officialMorale: -14, severity: 20, secretMemorials: 2 }, log: '曾静等处死，陆生楠《存疑》一并销毁究办。' }
+    ]
+},
+{
+    year: 1733, month: 12,
+    from: '内务府 圆明园工程',
+    title: '为奏报圆明园工程事',
+    summary: '圆明园已成宫室苑囿之盛，请增修殿宇并添设守卫。',
+    body: '臣等谨奏：\n\n圆明园自雍正三年蒙皇上修建，今已成宫室苑囿，殿宇台榭相望，规制宏丽。诸景命名皆出御笔，海内仰观者莫不为非常。\n\n今请增修：\n\n一、增建殿宇楼阁数十所，工银请由内帑核给；\n二、添设守卫三千人，分隶八旗、包衣；\n三、园中工匠、匠役，照例保结，不得私募；\n四、园中舟船、什物，造册报部；\n五、园外河道，疏浚一次，以备舟行。\n\n伏乞圣裁。',
+    zhupi: '知道了。工程之事，务要精工，不得浮报。守卫仍用内府人，朕另有裁处。',
+    mize: '密报：圆明园之用银，近三年已逾百万，工部所报与实际不符者十之三四。营造之内臣，采买木石，每多虚价。臣又闻：皇上以圆明园为每日听政之所，然园外护卫仍沿用旧制，与紫禁城同，未免单薄。',
+    options: [
+        { label: '准予增修，并严核工银', hint: '园成而帑不虚耗', effects: { treasury: -40, officialMorale: 8, imperialPower: 4, publicSupport: -4, integrity: 12 }, log: '圆明园增修，而工银严核，工价一钱不虚。' },
+        { label: '停工省帑，专心西陲军务', hint: '以战为先', effects: { treasury: 25, militaryStrength: 8, publicSupport: 4, mercy: 6 }, log: '圆明园增修之议暂停，帑银转备军需。' },
+        { label: '照议增修，加固园防', hint: '享乐与安全兼顾', effects: { treasury: -70, imperialPower: 6, officialMorale: -6, severity: 2 }, log: '圆明园增修殿宇，守卫加至五千。' },
+        { label: '增修而不加银，令工部以节余之银充之', hint: '知情方略——不另开新例', needMize: true, effects: { treasury: -15, officialMorale: 10, integrity: 14, imperialPower: 4 }, log: '圆明园增修，工银取之节余，内帑不多费一钱。' }
+    ]
+},
+
+/* ===================== 雍正十二年 ===================== */
+{
+    year: 1734, month: 5,
+    from: '吏部尚书 鄂尔泰 等',
+    title: '为增广取士并请别立科目事',
+    summary: '科目取士太隘、真才不得，请增额并别立科目。',
+    body: '臣等谨奏：\n\n皇上锐意求才，而科目所取，童试入学，动辄数千；乡会中式之额，日增不减；而真能读书者，未必能中式。\n\n臣请：\n\n一、增广取士之额，宽一分登进之路；\n二、别立科目，择《四书》《五经》之外有益经济之学，别为取士；\n三、乡会中式之额，宁可从宽，不可过隘；\n四、严查捐纳之滥，公捐不得折实数。\n\n伏乞圣裁。',
+    zhupi: '所奏是。取士之制，所以得天下之才，不可私心于科目。着吏部会同礼部详议具奏。',
+    mize: '密报：捐纳之滥，已至有捐至「员外郎」而实不任事者。某部以捐务虚报，岁入银数十万，其实入库者不及一半。臣以为：此弊与吏治相表里，不清则仕途不清。\n\n又，皇上自即位以来，殿试多取翰詹，年年如此，而科目之额日增；士子以为只要工文章即可中式，吏事荒疏者亦登科目。',
+    options: [
+        { label: '准增额别科，并严禁捐纳', hint: '广收真才，士林大悦', effects: { officialMorale: 18, publicSupport: 7, treasury: 15, 'reforms.tuigu': 10, integrity: 12 }, log: '增广取士，别立科目，捐纳从严。' },
+        { label: '仅增额，别科徐议', hint: '稳', effects: { officialMorale: 10, publicSupport: 4, treasury: 8 }, log: '乡会中式之额增广，别科暂缓。' },
+        { label: '维持旧制，专意各省实务', hint: '不轻改制度', effects: { officialMorale: 4, treasury: 20 }, log: '取士之制仍旧，一意经理封疆。' },
+        { label: '别立科目，取经济实用之学，并许吏员考试铨选之法', hint: '知情方略——真取实务之才', needMize: true, effects: { officialMorale: 22, publicSupport: 8, treasury: 10, integrity: 16, 'reforms.tuigu': 12, secretMemorials: 1 }, log: '别立实务科目，吏员考试铨选之法并行，仕途一新' }
+    ]
+},
+{
+    year: 1734, month: 11,
+    from: '户部尚书 允禄 等',
+    title: '为整顿钱法并请增铸制钱事',
+    summary: '钱质私薄、销钱为利，请严禁私铸销钱并增铸制钱。',
+    body: '臣等谨奏：\n\n铜钱者，所以通百物、便民用。年来私铸之弊渐炽：或掺杂铅锡，或剪边薄肉，一钱之铜，得钱三四。海内钱价日低，物价日昂。\n\n又江浙、湖广诸处，私销之厂，动以千计，毁钱铸器，一县之钱不足以供一厂之炉。\n\n臣请：\n\n一、私铸之罪，照例严处，不许宽纵；\n二、销钱之厂，悉行查禁，令州县具结永禁；\n三、增铸制钱，以足民用；\n四、各省钱价，着地方官随时酌定，务使钱与物价相称；\n五、收买之铜，悉由官给价，不许私买。',
+    zhupi: '所奏是。钱法关系天下，不可不整。着各省严查私铸销钱，朕不吝重赏，亦不宽宥一字。',
+    mize: '密报：查得某省私铸之案，其人系一已革职官员之子，藩司为之回护。臣另有一条证据在手，未敢遽发，请旨。\n\n又，铜价近来日昂，私商收买之数已过官价三倍。若不官给价收买，则私炉必不能禁，而增铸之铜亦将为所夺。',
+    options: [
+        { label: '严查到底，不论官绅一体究办', hint: '肃清钱法，触动人众', effects: { treasury: 25, publicSupport: 7, officialMorale: 12, 'reforms.tandin': 8, integrity: 14, severity: 8 }, log: '私铸销钱严查，江浙楚各省多设钱厂收其炉具。' },
+        { label: '并准所奏，但许自首者免罪', hint: '网开一面以取证', effects: { treasury: 15, publicSupport: 4, officialMorale: 6, mercy: 6 }, log: '钱法严查，自首者免，首获者赏。' },
+        { label: '止增铸制钱，查禁之事从缓', hint: '治标', effects: { treasury: -20, publicSupport: -6 }, log: '增铸制钱，私铸之查暂缓。' },
+        { label: '官给价收买铜斤，使私无利可图', hint: '知情方略——釜底抽薪', needMize: true, effects: { treasury: 20, publicSupport: 8, officialMorale: 14, integrity: 18, 'reforms.tandin': 10, secretMemorials: 1 }, log: '官给价收买铜斤，私炉无利可图，钱法乃清。' }
+    ]
+},
+
+/* ===================== 雍正十三年 ===================== */
+{
+    year: 1735, month: 3,
+    from: '大学士 张廷玉 等',
+    title: '为鄂尔泰病笃乞骸骨并请预定继任事',
+    summary: '鄂尔泰病笃，请准其休养，并简大员交代苗疆方略。',
+    body: '臣等谨奏：\n\n云贵总督鄂尔泰，自任事以来，经理西南，苗疆之政赖以大定。今其自上年秋间咳血不止，近益笃，饮食不进，形容枯槁，医者言已无时日。\n\n其恳请乞骸骨。臣等公同计议，宜准其休养，以全其功。惟苗疆新定，方略不可中辍，请预简大员一二人，先赴滇黔交代方略，俟其病愈，尚可商榷。\n\n又鄂尔泰所举之人如杨名时等，上试用之外，别无他议。\n\n伏乞圣裁。',
+    zhupi: '知道了。着准鄂尔泰在任养病，朝廷事有紧急，召来奏对。苗疆交代，着杨名时先行赴任，不必待朕再旨。',
+    mize: '密报：鄂尔泰病笃，其家已置办身后之物，田宅之数，较入滇时增至三倍。臣又闻：鄂尔泰所办苗疆一案，耗银数十万，而苗疆并未大安。案卷之中，或有不尽实之处。\n\n然其功亦不可没。臣以为：功过俱在史册，惟皇上裁之。\n\n又，鄂尔泰与怡亲王素不相能；今怡亲王已薨，皇上若不早定其继，黔中必有争。',
+    options: [
+        { label: '准其致仕，厚给恤典', hint: '保全功臣体面', effects: { officialMorale: 10, 'officials.eertai': 10, treasury: -20, publicSupport: 3, mercy: 8 }, log: '鄂尔泰致仕归里，赐银不给。' },
+        { label: '留任待死，交代后事', hint: '不放人，功高而不终', effects: { 'reforms.tuigu': 10, officialMorale: -6, 'officials.eertai': -10, severity: 6 }, log: '鄂尔泰留任待疾，苗疆方略交代而后去。' },
+        { label: '其功其过，一并付史馆核实', hint: '留一笔明白账', effects: { officialMorale: 14, publicSupport: 3, integrity: 14, secretMemorials: 1 }, log: '鄂尔泰平苗一案，交史馆核实立传。' },
+        { label: '不问功过，先简杨名时赴黔，以防苗疆生变', hint: '知情方略——先安其局', needMize: true, effects: { 'reforms.tuigu': 16, publicSupport: 6, officialMorale: 8, 'officials.eertai': 6, integrity: 8 }, log: '杨名时先赴滇黔接任，苗疆如故。' }
+    ]
+},
+{
+    year: 1735, month: 5,
+    from: '直隶总督 李卫',
+    title: '为田文镜病故并请旌表廉吏事',
+    summary: '田文镜病故河南任上，请赠恤并旌表天下清官。',
+    body: '臣李卫谨奏：\n\n河南巡抚田文镜，于本月病卒于任所，年七十。臣亲至其家，见其室无余财，惟旧衣数件、俸银账册而已。\n\n其在山西、河南两任，共行火耗归公之法，清查亏空，严惩贪墨，吏民至今称之。然其性峻急，劾人不择贤不肖，怨者亦多。\n\n臣请：\n\n一、赠太子少保，予祭葬，如其意；\n二、于河南立祠，与李敏、于成龙诸先贤同祀；\n三、于各省旌表清官，以风劝末俗。',
+    zhupi: '知道了。田文镜清慎，朕所深知。准予祭葬，立祠于河南。旌表清官之事，交吏部定例。',
+    mize: '密报：田文镜所行火耗归公，其所以能行者，因其在山西有年羹尧为其撑腰；及在河南，则赖皇上之力为之后盾。继任者若不知所以然，则前功尽弃。\n\n又：田文镜与鄂尔泰不和，其死，鄂之党中或有言。皇上若此时旌表田文镜，恐鄂尔泰之党不安；然若不旌，则河南百姓不服。',
+    options: [
+        { label: '厚赠立祠，并定火耗归公之成例', hint: '让改革成为制度而非个人', effects: { 'reforms.huohao': 26, publicSupport: 7, officialMorale: 14, treasury: -20, integrity: 12 }, log: '田文镜立祠河南，火耗归公著为成例。' },
+        { label: '厚赠立祠，不另立新例', hint: '守成', effects: { officialMorale: 8, publicSupport: 3, 'reforms.huohao': 8, treasury: -15 }, log: '田文镜立祠河南，朝野追思。' },
+        { label: '成例可立，而祠不必建', hint: '省帑且免地方攀附', effects: { 'reforms.huohao': 18, officialMorale: 6, treasury: 8, integrity: 8 }, log: '火耗归公著为成例，河南不建生祠。' },
+        { label: '立祠而缓其神位，以待身后定谥', hint: '知情方略——两存其平', needMize: true, effects: { 'reforms.huohao': 22, publicSupport: 8, officialMorale: 10, treasury: -10, mercy: 6 }, log: '河南为田文镜立祠而缓题神位，其谥俟公议。' }
+    ]
+},
+{
+    year: 1735, month: 8,
+    from: '诸王大臣 全体',
+    title: '为请上尊号并预议建储事',
+    summary: '在位日久，中外同庆，请上尊号并早定储位。',
+    body: '臣等谨奏：\n\n皇上御宇十三年，励精图治，宵旰不遑。今海宇承平，仓库有余，兆民称庆。\n\n群工以谓宜上尊号曰「敬天勤民皇帝」，以彰功德；并宜早建储贰，以安宗社之心。\n\n臣等不敢擅决，恭候圣裁。\n\n（奏本附：诸王大臣等咸以皇上春秋鼎建，不宜遽言传位，然储贰之事，终不可不议。）',
+    zhupi: '尊号不必。朕一生不为虚名。储贰之事，朕自有安排，汝等毋得妄议。',
+    mize: '密报：皇上龙体不豫已久，宫中医药皆出于内大臣之手，外廷所知者少。怡亲王允祥已薨，皇上失一臂膀。皇上四子中，弘历长于诸子，然其人外圆滑而内有城府。诸王大臣于储事之上，观望者多，异议者亦不少。\n\n又：皇上此数月，召大臣，语及身后者再四，而每次皆言「朕自有安排」。若皇上真有安排，则储事可定；若竟无安排，则国家之祸在此一举。',
+    options: [
+        { label: '固辞尊号，仍密定储贰', hint: '不居虚名，稳宗社', effects: { imperialPower: 14, publicSupport: 4, officialMorale: 8, secretMemorials: 1 }, log: '上尊号固辞，储贰之事密定于内阁与宗人府。' },
+        { label: '受尊号以安人心，储事再议', hint: '取现实之稳', effects: { publicSupport: 9, imperialPower: -4, officialMorale: 4, treasury: -30 }, log: '皇上受尊号「敬天勤民皇帝」，储事暂缓。' },
+        { label: '一切不问，专心养病', hint: '拖', effects: { imperialPower: -12, officialMorale: -8, publicSupport: -4 }, log: '尊号与储事俱搁置，皇上专意调摄。' },
+        { label: '密召张廷玉、允禄等定密诏，预作两手之备', hint: '知情方略——先定密诏再示人', needMize: true, effects: { imperialPower: 16, publicSupport: 6, officialMorale: 10, 'officials.zhangTingyu': 10, secretMemorials: 2 }, log: '储贰密诏预拟两稿，藏之御前。' }
+    ]
+},
+{
+    year: 1735, month: 10,
+    from: '大学士 张廷玉 等',
+    title: '为皇上大行并颁遗诏事',
+    summary: '皇上大行，谨奉遗诏，谨拟尊谥庙号。',
+    body: '臣等谨奏：\n\n皇上大行于雍正十三年八月二十三日寅时。臣等哀恸无已。\n\n遗诏付托：着皇四子弘历继位，是为乾隆皇帝。\n\n遗诏之中，朕另有数行付托，嘱军机大臣、大学士等善辅冲子，勿得专权，勿得结党。\n\n臣等伏读遗诏，痛绝失声。谨拟尊谥号曰「毅皇帝」，庙号曰「世宗」，拟谥法如下：\n\n刚毅决断、内外兼优、曰毅。\n\n伏乞裁定。',
+    zhupi: '知道了。尊谥庙号，照所拟。朕之身后事，付托诸卿。朕一生所经营者，尽在平反宗室、清理积弊、刷新治三事。诸卿善守之，勿坠。',
+    mize: '（密折）臣张廷玉谨奏：先帝一朝，十三载之功，毁誉在朝廷。今上已定，奴才等惟有尽心而已。\n\n附：先帝曾自言「朕一生为是不够勤勉」，又言「朕得年羹尧之力，亦受年羹尧之累」。此二语，臣记之。',
+    options: [
+        { blindRisk: true, label: '准谥毅皇帝、庙号世宗', hint: '盖棺定论', effects: { imperialPower: 10, publicSupport: 7, officialMorale: 12, treasury: -40 }, log: '尊谥毅皇帝，庙号世宗，葬清西陵泰陵。' },
+        { label: '典礼从厚，命儒臣纂修实录，以彰十三年之功', hint: '身后之名，付之史笔', effects: { publicSupport: 10, officialMorale: 16, imperialPower: 4, treasury: -30 }, log: '敕修世宗实录，礼官奏仪从厚。' }
+    ]
+}
+];
+/* ============================================================
+   支线事件库
+   SCHEDULED : {奏折序号(该折批完之后): [事件]} —— 按史实年月锚定
+   RANDOM   : 随机灾异池（任何时点可触发，年月随当时）
+   事件选项同样支持 needMize（阅邸报方知详情）—— 本版事件均为公开邸报，
+   故一律可阅。
+   ============================================================ */
+const SCHEDULED = {
+
+/* 元年八月大典之后 */
+2: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1723, month: 11,
+    from: '直隶总督 康熙 阿',
+    title: '为直隶蝗蝻成灾事',
+    summary: '保定、真定等处蝗蝻蔽天，晚禾尽毁，请赈济并免赋。',
+    body: '臣阿谨奏：\n\n本月保定府属清苑、蠡县，及正定府属无极、灵寿等处，飞蝗蔽天，落地如雨，禾苗尽食。乡民捕蝗无力，惟有掘土掩埋。\n\n臣已驰驿往视，蝗势未已，米价已腾至平日三倍。秋成既坏，来岁必饥。\n\n臣请：\n\n一、即动常平仓米，設厂施粥；\n二、被灾州县，本年钱粮缓征；\n三、准百姓就地捕蝗，输蝗者照例给赏；\n四、饬有司，严禁胥吏借赈行勒索。',
+    options: [
+        { label: '准动常平仓赈济，并缓本年钱粮', hint: '活民为先，藩库受损', effects: { publicSupport: 8, treasury: -25, mercy: 12, severity: -4 }, log: '直隶蝗灾，准动常平仓赈济并缓征钱粮。' },
+        { label: '发帑赈济，令捕蝗有司一体督责', hint: '费帑而速其平', effects: { publicSupport: 4, treasury: -45, officialMorale: 6, severity: 6 }, log: '直隶捕蝗，发帑赈济，有司督责甚严。' },
+        { label: '责州县自行劝谕捐赈，不动公帑', hint: '省钱，然可致刁民扰乡', effects: { integrity: 4, treasury: 8, publicSupport: 3, officialMorale: -8, severity: 8 }, log: '直隶蝗灾，令州县劝谕捐赈，乡民颇受骚扰。' }
+    ]
+}],
+
+/* 二年二月青海之后 */
+5: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1724, month: 4,
+    from: '江南河道总督 嵇曾筠 等',
+    title: '为淮扬被水并请蠲赈事',
+    summary: '江淮梅雨旬余，河湖并涨，淮扬诸州县田庐被淹，请赈。',
+    body: '臣等谨奏：\n\n入夏以来，江淮梅雨旬余，淮扬各属河水与湖并涨，高邮、宝应、山阳、淮安一带，圩田淹没，民舍漂没者以千计。\n\n臣等已督率有司，驾船照户散米。然灾户太众，仓谷不赈。\n\n臣等请：\n\n一、动支常平仓，并请发帑银二十万两；\n二、被灾田亩，蠲免本年钱粮；\n三、准灾民渡江就食，并严禁官吏人贩粟、居奇；\n四、堤岸决口处，即行抢修，秋前完工。',
+    options: [
+        { label: '准发帑二十万两，并蠲免本年钱粮', hint: '救急最速，帑银大出', effects: { publicSupport: 10, treasury: -55, mercy: 14 }, log: '淮扬被水，发帑二十万两赈济并蠲免钱粮。' },
+        { label: '先动常平仓，帑银俟灾情已明再议', hint: '分寸有度', effects: { publicSupport: 6, treasury: -20, mercy: 8 }, log: '淮扬先发常平仓米赈济，帑银俟核实再拨。' },
+        { label: '蠲赋为主，赈济从简，以保国用', hint: '轻赈重免', effects: { publicSupport: 3, treasury: -8, mercy: 6, officialMorale: -4 }, log: '淮扬蠲免钱粮，赈事从简而行。' }
+    ]
+}],
+
+/* 二年五月积欠之后 */
+5: [{
+    tag: '言官', tagName: '邸报 · 言官',
+    year: 1724, month: 8,
+    from: '监察御史 彭启丰',
+    title: '为参奏年羹尧骄纵并请处其僭越事',
+    summary: '御具奏：羹尧奏事用「便宜」，逾制僭越，请朝廷处之。',
+    body: '臣彭启丰谨奏：\n\n臣伏见川陕总督年羹尧，自平青海以来，奏事必用「便宜」二字，谕阁臣、批属官亦复如此。\n\n又其父年逾六旬，皇上赐衔一等公，而年羹尧又请为祖父母父母建坊；其府第在西安，僭用九楹，门前列戟；其仆从骑者千余，皆佩刀，出入以黄骑马。\n\n臣又闻，西宁军中号令皆出年羹尧之门，部司凡事先呈其私第，然后入奏。\n\n年羹尧固有功，然功已至此，恐尾大不掉，害及国家。臣不敢不言。',
+    options: [
+        { label: '交该部议处，姑不深究', hint: '息争而养其骄', effects: { 'officials.nianGengyao': 8, imperialPower: -6, severity: -4 }, log: '御史劾年羹尧，奉旨交部议处，不予深究。' },
+        { label: '留中不发，密令查其僭越诸事', hint: '暗查以取证', effects: { 'officials.nianGengyao': -6, imperialPower: 8, secretMemorials: 1 }, log: '年羹尧僭越诸事，密交科道查核。' },
+        { label: '即调年羹尧入京，以抚臣代其任', hint: '釜底抽薪，然边将解体', effects: { 'officials.nianGengyao': -20, militaryStrength: -8, imperialPower: 10, severity: 6 }, log: '年羹尧奉调入京，川陕另简大员。' }
+    ]
+}],
+
+/* 三年八月直隶之后 */
+9: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1725, month: 10,
+    from: '山东巡抚 岳濬',
+    title: '为东省亢旱并请蠲赈事',
+    summary: '山东自春不雨，蝗后继之以旱，秋粮绝望，请赈。',
+    body: '臣岳濬谨奏：\n\n东省自春徂夏不雨，六月以后又遭飞蝗，秋禾荡然。臣历巡东昌、曹州、济宁三府，百姓以草根树皮为食者甚众。\n\n臣已劝谕富室捐赈，然杯水车薪。\n\n臣请：\n\n一、准动常平仓米，并请发帑赈济；\n二、准贫民就食河南、江南，俟麦熟乃还；\n三、被灾州县，本年钱粮并缓一年；\n四、严禁胥吏下乡索赈扰民，一经查出即行枷号。',
+    options: [
+        { label: '准发帑并准就食河南、江南', hint: '救活最速，路费浩繁', effects: { publicSupport: 9, treasury: -50, mercy: 14 }, log: '山东大旱，准发帑赈济，并准灾民就食河南、江南。' },
+        { label: '蠲缓钱粮一年，赈事责诸有司', hint: '以宽赋为主', effects: { publicSupport: 4, treasury: -10, mercy: 10, officialMorale: -4 }, log: '山东被灾州县钱粮蠲缓一年，赈事责诸有司。' },
+        { label: '严催积欠，不许蠲免', hint: '库帑为重', effects: { integrity: 4, treasury: 30, publicSupport: 4, severity: 12 }, log: '山东积欠照旧追比，灾民无告。' }
+    ]
+}],
+
+/* 四年四月允禩之后 */
+11: [{
+    tag: '宗室', tagName: '邸报 · 宗室',
+    year: 1726, month: 7,
+    from: '宗人府 宗令 允禄',
+    title: '为宗室请安并请复爵宥过事',
+    summary: '宗室诸王以先帝旧行请安，乞复爵宥过，请皇上裁夺。',
+    body: '臣允禄谨奏：\n\n臣宗人府，谨按宗室例，具奏请安。\n\n今有宗室数人，以皇上践阼以来宗政未遑，请上御极之期，一同入朝请安。其间有允祉、允禟旧部，为允禩、允禟乞情者；有以先帝在日曾赐伊等封典，请予保留者。\n\n臣等不敢擅决。惟宗室之情，虽有亲疏，朝廷之法，贵在划一。\n\n伏乞圣裁。',
+    options: [
+        { label: '准其入朝请安，然不复爵、不宥过', hint: '施恩而守法', effects: { imperialPower: 10, 'officials.yinsi': -10, publicSupport: 4, mercy: 6 }, log: '宗室入朝请安，允之；复爵宥过之请不许。' },
+        { label: '一概不许，着令闭门守法', hint: '严 shuts the door', effects: { imperialPower: 14, 'officials.yinsi': -16, officialMorale: 6, severity: 10 }, log: '宗请安之请不许，着闭门守法。' },
+        { label: '许其请安，并宽其禁锢之家属', hint: '以德服人', effects: { imperialPower: -4, 'officials.yinsi': 10, publicSupport: 3, mercy: 12 }, log: '许宗室入朝请安，宽其家属之禁。' }
+    ]
+}],
+
+/* 五年八月驻藏之后 */
+14: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1727, month: 10,
+    from: '陕西总督 岳钟琪',
+    title: '为青海被雪并边民乏食事',
+    summary: '青海各部大雪压倒帐房，牲畜毙者过半，请赈其口粮。',
+    body: '臣岳钟琪谨奏：\n\n青海各部自十月起大雪连旬，积雪三尺，蒙古帐房为雪压倒者甚多，牲畜毙者过半。番民乏食，渐有流亡入边者。\n\n臣已令沿边各厅发仓赈济，然仓廪有限，而番民数万。\n\n臣请：\n\n一、准动西宁各厅仓储，并请拨内帑十万两；\n二、准于边地开仓，俟来岁丰稔归还；\n三、准流亡番民就地安插，勿令聚而生事；\n四、牧丁口粮，着该管官按口给发，毋得中饱。',
+    options: [
+        { label: '准发内帑十万两，并准边地开仓', hint: '救急安边，岁后须还', effects: { publicSupport: 7, militaryStrength: 8, treasury: -40, mercy: 12 }, log: '青海大雪，准发内帑十万两，并开边仓赈济。' },
+        { label: '令该管官自筹，止给旧存口粮', hint: '不另费帑', effects: { militaryStrength: 3, treasury: -8, publicSupport: -8, officialMorale: -6 }, log: '青海雪灾，令该管官自筹赈济。' }
+    ]
+}],
+
+/* 六年七月巡台之后 */
+15: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1728, month: 9,
+    from: '福建巡抚 蓝鼎元',
+    title: '为台疆飓风并请蠲免事',
+    summary: '台湾飓风大作，禾稼庐舍多损，请免其租、赈其灾。',
+    body: '臣蓝鼎元谨奏：\n\n七月内台地飓风大作，屋瓦飞、禾稼折，沿海尤甚，番社房屋倒者甚多。\n\n臣已遣官查勘，计全台被灾者十之三四，岁终恐无获。\n\n臣请：\n\n一、准蠲免被灾州县本年租谷；\n二、准动台湾仓米赈济番民；\n三、准商船贩米往台者免其关税；\n四、番社头目 loss 死亡者，许其保结补给。',
+    options: [
+        { label: '准蠲免并准商船免税运米往台', hint: '番汉俱济，海关少收', effects: { publicSupport: 8, 'reforms.tuigu': 8, treasury: -15, mercy: 10 }, log: '台湾飓风，准蠲免租谷，并许商船免税运米。' },
+        { label: '准蠲免，赈济止用台仓', hint: '照例', effects: { publicSupport: 4, treasury: -8, mercy: 6 }, log: '台湾飓风，准蠲免租谷，以台仓赈济。' }
+    ]
+}],
+
+/* 七年六月摊丁之后 */
+17: [{
+    tag: '言官', tagName: '邸报 · 言官',
+    year: 1729, month: 8,
+    from: '河南巡抚 田文镜',
+    title: '为摊丁之议士绅呈诉事',
+    summary: '豫晋士绅联名呈诉摊丁「名为不加赋、实为增派」，请皇上裁夺。',
+    body: '臣田文镜谨奏：\n\n摊丁入亩之议既行，河南、山西士绅联名呈诉者不下千人，其辞曰：丁银向由无地之民分摊，今改为有田者分摊，是「以有田之家代无田之民纳银」，名为不加赋，实为增派。\n\n臣窃谓：田多者出银多，田少者出银少，此乃正理。且丁银本为代丁之钱，一经摊归，编户齐一，逃户自返。\n\n然绅民之争，臣不敢不奏，请旨训谕。\n\n伏乞圣裁。',
+    options: [
+        { label: '明谕「丁银摊入田赋，贫民得免」之意，颁行天下', hint: '正面宣示，推行愈速', effects: { 'reforms.tandin': 18, publicSupport: 9, officialMorale: -6, severity: 6 }, log: '摊丁之议明谕天下，绅民之争遂定。' },
+        { label: '曲徇绅情，略为变通，摊丁之额暂缓加增', hint: '折中，推稍缓', effects: { 'reforms.tandin': 8, publicSupport: 2, officialMorale: 4, mercy: 8 }, log: '摊丁之额暂缓加增，俟后再议。' },
+        { label: '严旨申斥，究为首阻挠者', hint: '峻法推行，众怨集于皇上', effects: { integrity: 4, 'reforms.tandin': 22, publicSupport: 3, officialMorale: -10, severity: 14 }, log: '摊丁申斥遵旨，究办阻挠为首之徒。' }
+    ]
+}],
+
+/* 八年三月士民当差之后 */
+19: [{
+    tag: '民变', tagName: '邸报 · 民变',
+    year: 1730, month: 6,
+    from: '直隶总督 李卫',
+    title: '为直隶绅士聚众抗差事',
+    summary: '保定一带绅士聚众鼓噪，拒纳当差，请旨处置。',
+    body: '臣李卫谨奏：\n\n保定府属清苑、完县等处，绅士聚众鼓噪，拒纳当差，砸毁粮局，拥塞县门。臣已遣兵围拿，获首事者数名。\n\n然臣不敢遽办：此輩皆本地望族，其子多在京为官，若绳以法，恐激成大乱。\n\n臣请：\n\n一、先拿首事、胁从者，宽胁从而罚首恶；\n二、准当差之数，分为五等，士绅与庶民同例而不加倍；\n三、晓谕各府：皇上之意在均平，不在困士。\n\n伏乞圣裁。',
+    options: [
+        { label: '准其所议，罚首恶而宽胁从，当差分等', hint: '以退为进，保住新政', effects: { 'reforms.tuigu': 16, publicSupport: 8, officialMorale: 8, mercy: 10, severity: -4 }, log: '直隶抗差事，首恶数人枷号，胁从者免，当差分等行。' },
+        { label: '尽捕为首者，族有从前有官者一并究办', hint: '雷霆震慑，众怨归朕', effects: { integrity: 4, 'reforms.tuigu': 10, publicSupport: 4, officialMorale: -8, severity: 16 }, log: '直隶抗差为首者尽捕究办，其党亦追。' },
+        { label: '令抚臣便宜处置，毋庸奏请', hint: '授权地方，自担干系', effects: { integrity: 4, 'reforms.tuigu': 6, publicSupport: 2, 'officials.liwei': 6, severity: 6 }, log: '直隶抗差事，着李卫便宜处置。' }
+    ]
+}],
+
+/* 九年月西陲预警之后 */
+21: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1731, month: 10,
+    from: '陕西总督 岳钟琪',
+    title: '为军中疫疠并请给药事',
+    summary: '西宁军中大疫，死者数百，请给药并许军中自防。',
+    body: '臣岳钟琪谨奏：\n\n入秋以来，西宁城中及沿边营堡疫疠大作，士卒中染病者日以百计，殁者已数百人。医家云：此由秋燥水涸，秽气入人。\n\n臣已令各营将病者别居，给以医药，然仓中药品将尽。\n\n臣请：\n\n一、准由内地发医药二十万剂，并遣医士；\n二、准病卒给恤；\n三、各营宜预作防疫之制，毋俟既病而后治。',
+    options: [
+        { label: '准发医药遣医，并准病卒给恤', hint: '安军心，费帑', effects: { militaryStrength: 14, treasury: -25, officialMorale: 8, mercy: 8 }, log: '西宁军中大疫，发医药遣医，病卒给恤。' },
+        { label: '止遣医药，兵丁病殁照例抚恤', hint: '省帑', effects: { militaryStrength: 6, treasury: -10, publicSupport: -4 }, log: '西宁军中大疫，遣医药不满，兵丁病殁照例抚恤。' }
+    ]
+}],
+
+/* 十年六月西宁战之后 */
+23: [{
+    tag: '民生', tagName: '邸报 · 民生',
+    year: 1732, month: 8,
+    from: '户部尚书 允禄 等',
+    title: '为京师米贵并请禁囤积平粜事',
+    summary: '西边用兵，京师米价腾贵，奸商囤积居奇，请平粜并禁囤。',
+    body: '臣等谨奏：\n\n西陲用兵，粮运浩繁，京师米价由每石一钱增至三钱，米铺闭门者有之。\n\n臣等访得奸商某某等，藉官籴之便，暗积居奇，每俟价昂而发；又有多牙行拦贩，抬高市价。\n\n臣等请：\n\n一、动京仓米平粜于市，毋得令价再昂；\n二、查禁囤积，囤户照例治罪；\n三、严禁铺户歇业，闭者重罚；\n四、禁一切捐输，以杜浮费。',
+    options: [
+        { label: '准动京仓平粜，并查办囤积奸商', hint: '市价即平，商贾怨', effects: { publicSupport: 9, treasury: -20, integrity: 14, severity: 6 }, log: '京师米贵，准动京仓平粜，奸商囤积者枷号。' },
+        { label: '令各处官籴照旧，市价听其自然', hint: '不与民争利', effects: { treasury: 12, publicSupport: -8, mercy: 8 }, log: '京师米价，官籙如旧，不与民争利。' }
+    ]
+}],
+
+/* 十一年八月吕留良拟罪之后 */
+25: [{
+    tag: '言官', tagName: '邸报 · 言官',
+    year: 1733, month: 10,
+    from: '江南道监察御史 某',
+    title: '为江南士子呈词乞恩事',
+    summary: '江南士子为曾静等呈词，乞皇上宽其刑，请示。',
+    body: '臣谨奏：\n\n吕留良一案拟罪，严决在即。乃者江南士子数百人联名呈词，乞皇上「以好生为念」，言曾静等虽狂悖，然曾受父师之训，非有意悖逆；且其书已行于世，诛之恐无益。\n\n臣以为，律法者所以治天下，非所以快一人之忿。若众人呈词而许之，则此后人人得以「舆论」挠国法；若不许，则恐江南士林人人自危，弃举业而失业。\n\n伏乞圣裁。',
+    options: [
+        { label: '不允所请，刑照原拟', hint: '法立而心寒', effects: { integrity: 4, imperialPower: 14, publicSupport: 3, severity: 12, officialMorale: -8 }, log: '江南士子呈词不许，吕留良一案刑照原拟。' },
+        { label: '许其呈词，然刑期稍宽，俟秋后执行', hint: '法与情两全', effects: { imperialPower: 8, publicSupport: 4, officialMorale: 4, mercy: 10 }, log: '许士子呈词，吕留良一案俟秋后执行。' },
+        { label: '宽其家属田产，许其应试，第减等处分', hint: '留一线生机', effects: { publicSupport: 9, imperialPower: 4, officialMorale: 2, mercy: 14 }, log: '吕留良家属减等，宽其田产，仍许应试。' }
+    ]
+}],
+
+/* 十二年五月取士之后 */
+27: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1734, month: 7,
+    from: '陕西巡抚 嵇曾筠',
+    title: '为陕甘饥荒并请赈济事',
+    summary: '陕甘连年不登，米价腾贵，乏食者众，请发帑赈济。',
+    body: '臣嵇曾筠谨奏：\n\n陕甘二省，去岁今岁，甘肃河西尤苦不登，米价腾至平日五倍，贫民掘草根以食，甚至有鬻子者。\n\n臣已开常平仓，然仓中存数已虚，报表皆云「仓储空虚」，此必有虚报。\n\n臣请：\n\n一、准发内帑三十万两，遣官赈济；\n二、准以工代赈，兴修渠堰；\n三、严禁粮商囤积，犯者立枷；\n四、虚报仓储之州县，即行参处。\n\n伏乞圣裁。',
+    options: [
+        { label: '准发内帑三十万两，并查虚报仓储之州县', hint: '赈与查并重', effects: { publicSupport: 9, treasury: -45, integrity: 16, mercy: 10, severity: 6 }, log: '陕甘饥荒，发内帑三十万两赈济，并参处虚报仓储之州县。' },
+        { label: '准发内帑二十万两，余以工代赈', hint: '省帑而以工养民', effects: { publicSupport: 7, treasury: -30, mercy: 8 }, log: '陕甘饥荒，发内帑二十万两，以工代赈兴修渠堰。' },
+        { label: '令有司自行劝捐赈济，朝廷不另发帑', hint: '不费帑而民受累', effects: { integrity: 4, publicSupport: 3, treasury: 5, severity: 8 }, log: '陕甘饥荒，令有司劝捐赈济，朝廷不另发帑。' }
+    ]
+}],
+
+/* 十三年三月鄂尔泰之后 */
+29: [{
+    tag: '边事', tagName: '邸报 · 边事',
+    year: 1735, month: 4,
+    from: '贵州巡抚 金德瑛',
+    title: '为苗疆土司旧部煽动作乱事',
+    summary: '已改土司旧部煽动苗民抗据流官，请调兵剿抚。',
+    body: '臣金德瑛谨奏：\n\n本月苗疆台江、丹江一带，有已改土司之旧，藉「复其世职」为名，煽动苗民抗据流官，焚掠村寨，戕害土弁。\n\n臣已调土兵守御，惟兵力单薄。\n\n臣请：\n\n一、调邻近各省兵力协剿，并请发火器；\n二、限一月而平，毋得扰及良苗；\n三、贼首必擒，胁从之苗，愿抚者仍编为民籍。\n\n伏乞圣裁。',
+    options: [
+        { label: '准调兵进剿，限一月而平', hint: '兵威既定，苗民复惊', effects: { integrity: 4, 'reforms.tuigu': 10, militaryStrength: 8, publicSupport: 2, officialMorale: 4, severity: 12 }, log: '苗疆乱事，调兵进剿，限一月而平。' },
+        { label: '专以抚为主，先谕以自新，逾限再剿', hint: '宽而活民，亦恐养奸', effects: { 'reforms.tuigu': 6, publicSupport: 4, mercy: 12, treasury: -10 }, log: '苗疆乱事，着先行招抚，逾限再剿。' },
+        { label: '责成鄂尔泰未病时旧臣杨名时专办，朝廷不另发兵', hint: '不增兵而专责之', effects: { 'reforms.tuigu': 10, publicSupport: 2, militaryStrength: -4, treasury: -5 }, log: '苗疆乱事，着杨名时专办，朝廷不另发兵。' }
+    ]
+}],
+
+/* 十三年五月田文镜之后 */
+30: [{
+    tag: '灾异', tagName: '邸报 · 灾异',
+    year: 1735, month: 7,
+    from: '江苏巡抚 尹继善',
+    title: '为江南大水并漕运迟误事',
+    summary: '苏松湖熟被淹，漕粮船不得运，请赈济并改运。',
+    body: '臣尹继善谨奏：\n\n入夏以来，江浙梅雨，苏松湖熟之地大被水灾，圩岸冲决者数十处，米熟未割而田已成泽国。\n\n漕运因此迟误，粮船积于湖口，例限已迫。\n\n臣请：\n\n一、准动常平仓米赈济，并请拨粳米十万石；\n二、漕运准予展限，改由海运，以速其行；\n三、被灾田亩蠲免本年钱粮；\n四、严禁州县借蠲赋之名加派。',
+    options: [
+        { label: '准发粳米十万石，漕运改海运并展限', hint: '两难之事并解，费帑而民安', effects: { publicSupport: 9, treasury: -50, mercy: 12, militaryStrength: 4 }, log: '江南大水，发粳米十万石，漕运改海运以速行。' },
+        { label: '准蠲免钱粮，赈济以常平仓米为限', hint: '省帑', effects: { publicSupport: 4, treasury: -15, mercy: 8 }, log: '江南大水，蠲免钱粮，以常平仓米赈济。' },
+        { label: '漕运照限，不许展期，违者严参', hint: '保漕期而失民命', effects: { integrity: 4, treasury: 25, publicSupport: 4, severity: 12 }, log: '江南大水，漕运仍照旧限，不许展期。' }
+    ]
+}]
+
+};
+
+/* 随机灾异池：任何时点可触发 */
+const RANDOM_EVENTS = [
+    {
+        tag: '灾异', tagName: '邸报 · 灾异', random: true,
+        from: '钦差监粮御史',
+        title: '为仓场失火事',
+        summary: '常平仓失火，积谷被焚，请查究并补仓。',
+        body: '臣谨奏：\n\n本月某处常平仓失火，焚毁谷米若干，石数与例额不符。\n\n臣查该处仓吏，近有重修仓廪之议，料价甚昂；又值仓中谷少，恐有抽粜之弊。\n\n臣请：\n\n一、准动帑补仓；\n二、准该处官吏交部严议；\n三、州县常平仓岁终一体报实，毋得虚额。',
+        options: [
+            { label: '准补仓，并将该处官吏交部严议', hint: '赈恤兼究弊', effects: { treasury: -12, publicSupport: 4, integrity: 12, severity: 8 }, log: '某处常平仓失火，准补仓，该处官吏交部严议。' },
+            { label: '只准补仓，官吏免议', hint: '宽事省扰', effects: { treasury: -12, publicSupport: 2, mercy: 6 }, log: '某处常平仓失火，准动帑补仓而已。' }
+        ]
+    },
+    {
+        tag: '灾异', tagName: '邸报 · 灾异', random: true,
+        from: '各州县 驿传',
+        title: '为疫疠盛行事',
+        summary: '闾阎之间疫疠盛行，请给药并禁聚众。',
+        body: '臣谨奏：\n\n近月某处疫疠盛行，里巷之间室九病，医者亦多染而不救。\n\n臣已设局施药，然药资不足；且城隍庙会聚集多人，恐为传染之媒。\n\n臣请：\n\n一、准发药材，并令禁止赛会；\n二、准疫死之家给恤；\n三、令邻近州县毋得 sells 米与他处。',
+        options: [
+            { label: '准发药禁会，并给恤疫死之家', hint: '防疫恤民', effects: { publicSupport: 6, treasury: -15, mercy: 12, officialMorale: 6 }, log: '某处疫疠，准发药材、禁赛会，给恤疫死之家。' },
+            { label: '禁会而已，药资令地方自筹', hint: '不费帑', effects: { publicSupport: 1, treasury: -5, mercy: 4, officialMorale: -4 }, log: '某处疫疠，禁止赛会，药资令地方自筹。' }
+        ]
+    },
+    {
+        tag: '灾异', tagName: '邸报 · 灾异', random: true,
+        from: '钦天监',
+        title: '为地震并请蠲恤事',
+        summary: '某处地震，民房倾压，请查灾并免赋。',
+        body: '臣谨奏：\n\n本月某处地震，声闻数十里，压毁民房甚多，伤人若干。\n\n臣已驰往赈给，然屋瓦木材无价，贫民露处。\n\n臣请：\n\n一、准给银修屋；\n二、准蠲免本年钱粮；\n三、令有司查报灾情，不得隐瞒虚报。',
+        options: [
+            { label: '准给银修屋并蠲免钱粮', hint: '费帑安民', effects: { publicSupport: 7, treasury: -25, mercy: 12 }, log: '某处地震，准给银修屋并蠲免钱粮。' },
+            { label: '止蠲免钱粮，修屋之事听民自便', hint: '省帑', effects: { publicSupport: -4, treasury: -5, mercy: 4 }, log: '某处地震，准蠲免钱粮，修屋听民自便。' }
+        ]
+    },
+    {
+        tag: '民生', tagName: '邸报 · 民生', random: true,
+        from: '江南道监察御史',
+        title: '为盐价腾踊并请禁私盐事',
+        summary: '两淮盐价腾贵，私盐充斥，请查禁并减价。',
+        body: '臣谨奏：\n\n两淮盐价每斤腾至八文，贫民食盐过半。臣访得私盐贩子由某处入江，岁入私盐数十万斤，盐商反苦于无贩。\n\n臣请：\n\n一、严缉私盐；\n二、减盐价，毋许盐棍引户囤积；\n三、贫民食盐之费，取之常平，毋得加派。',
+        options: [
+            { label: '准查禁私盐并减盐价', hint: '民悦而盐课稍损', effects: { publicSupport: 8, treasury: -20, integrity: 10, mercy: 8 }, log: '两淮盐价腾踊，准查禁私盐并减盐价。' },
+            { label: '只禁私盐，盐价听盐课定之', hint: '保课', effects: { treasury: 12, publicSupport: 2, integrity: 8 }, log: '两淮严禁私盐，盐价仍旧。' }
+        ]
+    },
+    {
+        tag: '灾异', tagName: '邸报 · 灾异', random: true,
+        from: '河道总督',
+        title: '为河工决口事',
+        summary: '某处河堤决口，淹没数十村，请抢修并赈济。',
+        body: '臣谨奏：\n\n本月某处河堤决口，淹没田亩村落数十，漂没人口无算。\n\n臣已率夫抢修，费银已逾十万，而下游之险未解。\n\n臣请：\n\n一、准发银抢修，并请增夫役；\n二、被淹州县蠲免钱粮；\n三、准于附近州县借夫给饷，事毕照数发还。',
+        options: [
+            { label: '准发银抢修并蠲免钱粮', hint: '塞决口为先', effects: { publicSupport: 7, treasury: -40, mercy: 8 }, log: '某处河堤决口，准发银抢修并蠲免钱粮。' },
+            { label: '责成河道官自行筹办，仅准借夫', hint: '不另发帑', effects: { treasury: -12, publicSupport: -6, officialMorale: -6 }, log: '某处河堤决口，责成河道官自行筹办，准借夫给饷。' }
+        ]
+    },
+    {
+        tag: '言官', tagName: '邸报 · 言官', random: true,
+        from: '监察御史',
+        title: '为劾某官虚销事',
+        summary: '御史纠劾某官虚销冒领，请旨查办。',
+        body: '臣谨奏：\n\n臣访闻某省某官，于养廉银、火耗归公款项之下，多列名目，虚销冒领，岁至数千。\n\n臣尚未得实据，不敢遽劾，然风闻已久，恐成积弊。\n\n臣请：\n\n一、准令该省布政使细查账目；\n二、准臣密访，得实即劾。',
+        options: [
+            { label: '准其密访查劾', hint: '除弊于未萌', effects: { treasury: 10, integrity: 12, officialMorale: 6, secretMemorials: 1 }, log: '御史奉旨密访虚销之案。' },
+            { label: '令布政使例行查账，不必密访', hint: '省事', effects: { treasury: 4, integrity: 6, officialMorale: 2 }, log: '御史所劾，令该省布政使例行查账。' }
+        ]
+    }
+];
+/* ============================================================
+   游戏逻辑 v2
+   —— 密折「阅 / 不阅」信息差：阅之则解锁「知情方略」选项；不阅而选，
+      若该选项标 blindRisk，则事后追悔（误判）。
+   —— 支线事件：奏折之间可触发天灾 / 言官 / 宗室 / 边事 / 民生事件。
+   —— 多结局：依改革、国力、皇权、严刻、宽仁、吏治、权臣等综合判定。
+   ============================================================ */
+const YEAR_NAMES = ['元年','二年','三年','四年','五年','六年','七年','八年','九年','十年','十一年','十二年','十三年'];
+
+const INITIAL_OFFICIALS = {
+    zhangTingyu: 80, tianWenjing: 70, yunxiang: 60, longkodo: 40,
+    nianGengyao: 50, yinsi: -50, eertai: 40, liwei: 30
+};
+
+const gameState = {
+    index: 0,
+    year: 1723, month: 8,
+    treasury: 800, publicSupport: 60, officialMorale: 50,
+    imperialPower: 50, militaryStrength: 55,
+    secretMemorials: 0,   // 已阅密折
+    mizeSkipped: 0,       // 封还不阅
+    mistakes: 0,          // 事后追悔
+    eventCount: 0,
+    reforms: { huohao: 0, tandin: 0, tuigu: 0 },
+    meter: { severity: 45, mercy: 50, integrity: 40, resentment: 40, insight: 20, suspicion: 30 },
+    officials: Object.assign({}, INITIAL_OFFICIALS),
+    mizeState: {},        // 奏折序号 -> 'read' | 'skipped'
+    log: [],
+    queue: []             // 待处理事件
+};
+
+const LIMITS = {
+    treasury: [0, 3000],
+    publicSupport: [0, 100],
+    officialMorale: [0, 100],
+    imperialPower: [0, 100],
+    militaryStrength: [0, 100],
+    severity: [0, 100],
+    mercy: [0, 100],
+    integrity: [0, 100],
+    resentment: [0, 100],
+    insight: [0, 100],
+    suspicion: [0, 100]
+};
+
+function clamp(key, v) {
+    const lim = LIMITS[key];
+    if (!lim) return v;
+    return Math.max(lim[0], Math.min(lim[1], v));
+}
+function clampRaw(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function yearLabel(y) {
+    const idx = y - 1723;
+    return '雍正' + (YEAR_NAMES[idx] || (idx + 1) + '年') + '（' + y + '）';
+}
+
+/* ---------- 启动 ---------- */
+function startGame() {
+    document.getElementById('splash').classList.add('hidden');
+    document.getElementById('container').style.display = 'block';
+    updateAll();
+    showMemorial();
+}
+
+function updateAll() {
+    updateYear(); updateStats(); updateReforms(); updatePeople(); updateHeart();
+    updateProgress(); updateWarning();
+}
+function updateYear() { document.getElementById('yearDisplay').textContent = yearLabel(gameState.year); }
+
+function updateProgress() {
+    const total = gameData.length;
+    const done = gameState.index;
+    document.getElementById('progressFill').style.width = (total ? done / total * 100 : 0) + '%';
+    document.getElementById('progressLabel').textContent =
+        '第 ' + Math.min(done + 1, total) + ' / ' + total + ' 折　·　阅密折 ' + gameState.secretMemorials +
+        '　·　支线 ' + gameState.eventCount + ' 事';
+}
+
+function updateStats() {
+    const stats = [
+        { label: '国库', value: Math.round(gameState.treasury) + '万两', max: 3000, current: gameState.treasury },
+        { label: '民心', value: gameState.publicSupport, max: 100, current: gameState.publicSupport },
+        { label: '官风', value: gameState.officialMorale, max: 100, current: gameState.officialMorale },
+        { label: '皇权', value: gameState.imperialPower, max: 100, current: gameState.imperialPower },
+        { label: '军力', value: gameState.militaryStrength, max: 100, current: gameState.militaryStrength },
+        { label: '密折', value: '阅 ' + gameState.secretMemorials + ' · 封 ' + gameState.mizeSkipped, max: 50, current: gameState.secretMemorials, plain: true }
+    ];
+    document.getElementById('statsPanel').innerHTML = stats.map(s => {
+        const w = s.plain ? 0 : Math.max(0, Math.min(100, (s.current / s.max) * 100));
+        const danger = !s.plain && (s.current <= 20);
+        return '<div class="stat-card' + (danger ? ' danger' : '') + '">' +
+            '<div class="stat-label">' + s.label + '</div>' +
+            '<div class="stat-value">' + s.value + '</div>' +
+            '<div class="stat-bar"><div class="stat-bar-fill" style="width:' + w + '%"></div></div>' +
+        '</div>';
+    }).join('');
+}
+
+const REFORM_META = [
+    { key: 'huohao', name: '火耗归公' },
+    { key: 'tandin', name: '摊丁入亩' },
+    { key: 'tuigu',   name: '改土归流' }
+];
+const METER_META = [
+    { key: 'integrity',  name: '吏治清' },
+    { key: 'resentment', name: '民 怨' }
+];
+const HEART_META = [
+    { key: 'insight',    name: '明 察', note: '阅密折则明，不阅则闇；明察 ≥40 则新政之效加三成，≥70 加五成' },
+    { key: 'suspicion', name: '猜 忌', note: '密报日多则疑心日重；猜忌耗官风、离心忠臣，≥60 则明察日减' }
+];
+
+function updateReforms() {
+    document.getElementById('reformPanel').innerHTML = REFORM_META.map(r =>
+        '<div class="reform-row"><div class="reform-name">' + r.name + '</div>' +
+        '<div class="reform-track"><div class="reform-fill" style="width:' + gameState.reforms[r.key] + '%"></div></div>' +
+        '<div class="reform-num">' + gameState.reforms[r.key] + '%</div></div>').join('');
+    const style = gameState.meter.severity - gameState.meter.mercy;
+    const half = Math.min(50, Math.abs(style) / 2);
+    const left = style >= 0 ? 50 : 50 - half;
+    const axisRow =
+        '<div class="reform-row"><div class="reform-name">取 向</div>' +
+        '<div class="reform-track axis"><div class="axis-mid"></div>' +
+        '<div class="reform-fill axisfill ' + (style >= 0 ? 'sev' : 'mer') + '" style="left:' + left + '%;width:' + half + '%"></div></div>' +
+        '<div class="reform-num">' + (style > 0 ? '偏严' : style < 0 ? '偏宽' : '持平') + '</div></div>';
+    document.getElementById('meterPanel').innerHTML = axisRow + METER_META.map(r =>
+        '<div class="reform-row"><div class="reform-name">' + r.name + '</div>' +
+        '<div class="reform-track"><div class="reform-fill alt" style="width:' + gameState.meter[r.key] + '%"></div></div>' +
+        '<div class="reform-num">' + gameState.meter[r.key] + '</div></div>').join('');
+}
+
+function updateHeart() {
+    const box = document.getElementById('heartPanel');
+    if (!box) return;
+    box.innerHTML = HEART_META.map(r =>
+        '<div class="reform-row"><div class="reform-name">' + r.name + '</div>' +
+        '<div class="reform-track"><div class="reform-fill alt" style="width:' + gameState.meter[r.key] + '%"></div></div>' +
+        '<div class="reform-num">' + gameState.meter[r.key] + '</div></div>' +
+        '<div class="heart-note">' + r.note + '</div>').join('');
+}
+
+function updatePeople() {
+    document.getElementById('peoplePanel').innerHTML = OFFICIALS.map(o => {
+        const v = gameState.officials[o.key] || 0;
+        const w = Math.abs(v) / 2, pos = v >= 0;
+        const left = pos ? 50 : 50 - w;
+        return '<div class="person"><div class="person-name">' + o.name + '</div>' +
+            '<div class="person-track"><div class="person-fill ' + (pos ? 'pos' : 'neg') + '" style="left:' + left + '%;width:' + w + '%"></div></div>' +
+            '<div class="person-val' + (pos ? '' : ' neg') + '">' + (v > 0 ? '+' : '') + v + '</div></div>';
+    }).join('');
+}
+
+function updateWarning() {
+    const msgs = [];
+    if (gameState.treasury < 100) msgs.push('国库将竭，赏罚无所出，官必有怨。');
+    if (gameState.publicSupport < 20) msgs.push('民心已失，号令不出于州县。');
+    if (gameState.imperialPower < 25) msgs.push('皇权削弱，宗室与外臣皆轻朝廷。');
+    if (gameState.militaryStrength < 25) msgs.push('边备空虚，藩篱可虞。');
+    if (gameState.meter.severity >= 75) msgs.push('峻法过甚，吏胥转相为恶，苛政之名将及朕身。');
+    if (gameState.meter.mercy >= 80) msgs.push('宽而无断，政事日弛，弊政因循。');
+    if (gameState.meter.resentment >= 70) msgs.push('民怨沸腾，苛政之名将及朕身。');
+    if (gameState.meter.suspicion >= 70) msgs.push('密报日多，疑心日重；臣下人人自危，忠言亦不敢尽。');
+    if (gameState.meter.insight < 18) msgs.push('久不阅密折，朕于外事竟不之知，全凭他人之口。');
+    const wb = document.getElementById('warningBox');
+    if (!wb) return;
+    wb.innerHTML = msgs.map(m => '<div class="warn show">' + m + '</div>').join('');
+}
+
+/* ---------- 奏折 ---------- */
+function visibleOptions(m, idx) {
+    const st = gameState.mizeState[idx];
+    return m.options.filter(o => !o.needMize || st === 'read');
+}
+
+function showMemorial() {
+    const box = document.getElementById('memorialContainer');
+    if (gameState.index >= gameData.length) { endGame(); return; }
+    const idx = gameState.index;
+    const m = gameData[idx];
+    gameState.year = m.year; gameState.month = m.month;
+    updateYear();
+
+    const st = gameState.mizeState[idx];
+    let mizeHtml = '';
+    if (m.mize) {
+        if (!st) {
+            const ins = gameState.meter.insight, sus = gameState.meter.suspicion;
+            const over = Math.max(0, sus - 50);
+            mizeHtml =
+                '<div class="mize-choice">' +
+                    '<div class="mize-choice-text">此折另有关键之处。<b>查阅密折</b>则隐情得明、解锁「知情方略」，然密报日多则疑心日重；' +
+                    '<b>封还不阅</b>则所见止于表面，然不疑人则不伤忠直。密折之代价，明列如下：</div>' +
+                    '<div class="mize-cost-table">' +
+                        '<div class="mct-row mct-head"><span>抉择</span><span>明察</span><span>猜忌</span><span>其余影响</span></div>' +
+                        '<div class="mct-row"><span class="mct-k">查阅密折</span>' +
+                            '<span class="mct-up">+3</span><span class="mct-up">+3</span>' +
+                            '<span class="mct-d">解锁「知情方略」选项；' +
+                            (ins >= 70 ? '明察既高，所行新政之效加五成。' : ins >= 40 ? '明察既高，所行新政之效加三成。' : '明察若至 40，所行新政之效加三成，至 70 加五成。') +
+                            (over > 0
+                                ? '猜忌过五十，每作一策耗官风 <b>' + (over * 0.25).toFixed(1) + '</b>，' +
+                                  '忠臣（张廷玉、怡亲王、鄂尔泰、李卫、田文镜）之心各耗 <b>' + (over * 0.12).toFixed(1) + '</b>，' +
+                                  '允禩、年羹尧、隆科多各得 <b>' + (over * 0.08).toFixed(1) + '</b>；'
+                                : '猜忌尚在五十以内，暂不损官风；') +
+                            (sus >= 55 ? '<b class="warntxt">猜忌已 ≥60，此后每策明察再减 ' + Math.ceil((sus - 55) / 10) + '</b>。' : '猜忌若升至 60，此后每策明察再减 1。') +
+                            '</span></div>' +
+                        '<div class="mct-row"><span class="mct-k">封还不阅</span>' +
+                            '<span class="mct-down">−1</span><span class="mct-down">−2</span>' +
+                            '<span class="mct-d">不得见「知情方略」；' +
+                            (ins >= 40 ? '新政之效加三成/五成之利亦失。' : '明察不足 40，新政不得加成。') +
+                            (ins < 25 ? '<b class="warntxt">明察已不足 25，事后追悔加罚（皇权 −5、官风 −5）</b>。' : '若事后追悔，罚为皇权 −3、官风 −3。') +
+                            '封还累计 ' + gameState.mizeSkipped + ' 封。</span></div>' +
+                    '</div>' +
+                    '<div class="mize-choice-btns">' +
+                        '<button class="reveal-btn" onclick="readMize()">查 阅 密 折<em>明察 +3 · 猜忌 +3</em></button>' +
+                        '<button class="skip-btn" onclick="skipMize()">封 还 不 阅<em>明察 −1 · 猜忌 −2</em></button>' +
+                    '</div>' +
+                    '<div class="mize-current">当前：明察 <b>' + ins + '</b> · 猜忌 <b>' + sus + '</b>　|　已阅 ' + gameState.secretMemorials + ' 封 · 已封还 ' + gameState.mizeSkipped + ' 封</div>' +
+                '</div>';
+        } else if (st === 'read') {
+            mizeHtml = '<div class="mize revealed"><div class="mize-label">【密折】</div><div class="mize-text">' + m.mize + '</div>' +
+                    '<div class="mize-cost">明察 ' + gameState.meter.insight + ' · 猜忌 ' + gameState.meter.suspicion + '</div></div>';
+        } else {
+            mizeHtml = '<div class="mize sealed"><div class="mize-label">【密折】</div><div class="mize-text">此折已封还，朕竟未之阅，其中隐情未知也。</div>' +
+                    '<div class="mize-cost">明察 ' + gameState.meter.insight + ' · 猜忌 ' + gameState.meter.suspicion + '</div></div>';
+        }
+    }
+
+    const opts = visibleOptions(m, idx);
+    const optHtml = opts.map((o, i) =>
+        '<button class="option-btn" onclick="selectOption(' + i + ')">' +
+            '<div class="option-label">' + (i + 1) + '. ' + o.label + '</div>' +
+            (o.hint ? '<div class="option-hint">※ ' + o.hint + '</div>' : '') +
+            (o.needMize ? '<div class="option-tag">因阅密折而知其详</div>' : '') +
+        '</button>').join('');
+
+    box.innerHTML =
+        '<div class="memorial-card">' +
+            '<div class="memorial-meta">' +
+                '<div class="memorial-from">' + m.from + '</div>' +
+                '<div class="memorial-date">' + yearLabel(m.year) + ' ' + m.month + '月</div>' +
+            '</div>' +
+            '<div class="memorial-title">' + m.title + '</div>' +
+            '<div class="memorial-summary">' + m.summary + '</div>' +
+            '<div class="memorial-body">' + m.body + '</div>' +
+            '<div class="zhupi"><div class="zhupi-label">【硃批】</div><div class="zhupi-text">' + m.zhupi + '</div></div>' +
+            mizeHtml +
+            '<div class="options">' + optHtml + '</div>' +
+        '</div>';
+    if (gameState.index > 0) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function readMize() {
+    const idx = gameState.index;
+    if (gameState.mizeState[idx]) return;
+    gameState.mizeState[idx] = 'read';
+    gameState.secretMemorials++;
+    gameState.meter.insight = clamp('insight', gameState.meter.insight + 3);
+    gameState.meter.suspicion = clamp('suspicion', gameState.meter.suspicion + 3);
+    addLog(gameData[idx].year, gameData[idx].month, '查阅密折：明察 +3，猜忌 +3。');
+    updateStats(); updateProgress(); updateHeart();
+    showMemorial();
+}
+
+function skipMize() {
+    const idx = gameState.index;
+    if (gameState.mizeState[idx]) return;
+    gameState.mizeState[idx] = 'skipped';
+    gameState.mizeSkipped++;
+    gameState.meter.insight = clamp('insight', gameState.meter.insight - 1);
+    gameState.meter.suspicion = clamp('suspicion', gameState.meter.suspicion - 2);
+    addLog(gameData[idx].year, gameData[idx].month, '封还不阅：明察 −1，猜忌 −2。');
+    updateStats(); updateProgress(); updateHeart();
+    showMemorial();
+}
+
+function selectOption(i) {
+    const idx = gameState.index;
+    const m = gameData[idx];
+    const opts = visibleOptions(m, idx);
+    const opt = opts[i];
+    if (!opt) return;
+
+    applyEffects(opt.effects);
+    addLog(m.year, m.month, opt.log);
+
+    // 信息差惩罚：未阅密折而选此策，事后追悔
+    if (opt.blindRisk && gameState.mizeState[idx] !== 'read') {
+        gameState.mistakes++;
+        const blind = gameState.meter.insight < 25;
+        const pen = blind ? { imperialPower: -5, officialMorale: -5 } : { imperialPower: -3, officialMorale: -3 };
+        applyPenalty(pen);
+        addLog(m.year, m.month, blind
+            ? '事后始知其中另有隐情；朕久不阅密折，闇于外事，虽悔亦晚，自认受蔽。'
+            : '事后始知其中另有隐情，朕自认受蔽，悔之。');
+    }
+
+    gameState.index++;
+    updateAll();
+    afterMemorial(idx);
+}
+
+function applyPenalty(obj) {
+    for (const key in obj) {
+        const val = obj[key];
+        if (key === 'treasury') gameState.treasury = Math.max(0, Math.min(3000, gameState.treasury + val));
+        else gameState[key] = clamp(key, (gameState[key] || 0) + val);
+    }
+}
+
+function applyEffects(effects) {
+    const sev0 = gameState.meter.severity, mer0 = gameState.meter.mercy;
+    const insNow = gameState.meter.insight;
+    const reformMult = insNow >= 70 ? 1.5 : insNow >= 40 ? 1.3 : 1.0;   // 明察加成：所行新政之效
+    for (const key in effects) {
+        let val = effects[key];
+        if (key.startsWith('reforms.') && val > 0) val = Math.round(val * reformMult);
+        if (key.startsWith('officials.')) {
+            const n = key.split('.')[1];
+            gameState.officials[n] = clampRaw((gameState.officials[n] || 0) + val, -100, 100);
+        } else if (key.startsWith('reforms.')) {
+            const n = key.split('.')[1];
+            gameState.reforms[n] = clampRaw((gameState.reforms[n] || 0) + val, 0, 100);
+        } else if (key === 'severity' || key === 'mercy' || key === 'integrity' || key === 'resentment') {
+            gameState.meter[key] = clamp(key, (gameState.meter[key] || 0) + val);
+        } else if (LIMITS[key]) {
+            gameState[key] = clamp(key, (gameState[key] || 0) + val);
+        } else if (key === 'secretMemorials') {
+            gameState.secretMemorials = Math.max(0, gameState.secretMemorials + val);
+        }
+    }
+    // 民怨自动派生：峻法则怨，怀柔则怨消
+    // —— 圣心二端的派生 ——
+    const ins = gameState.meter.insight, sus = gameState.meter.suspicion;
+    if (ins >= 40) gameState.meter.integrity = clamp('integrity', gameState.meter.integrity + Math.floor(ins / 40));
+    const over = Math.max(0, sus - 50);          // 猜忌之害，过五十而渐显
+    if (over > 0) {
+        gameState.officialMorale = clamp('officialMorale', gameState.officialMorale - over * 0.25);
+        ['zhangTingyu', 'yunxiang', 'eertai', 'liwei', 'tianWenjing'].forEach(k =>
+            gameState.officials[k] = clampRaw((gameState.officials[k] || 0) - over * 0.12, -100, 100));
+        ['yinsi', 'nianGengyao', 'longkodo'].forEach(k =>
+            gameState.officials[k] = clampRaw((gameState.officials[k] || 0) + over * 0.08, -100, 100));
+    }
+    const dSus = 0.4 * (gameState.meter.severity - sev0) - 0.4 * (gameState.meter.mercy - mer0);
+    gameState.meter.suspicion = clamp('suspicion', gameState.meter.suspicion + dSus);
+    if (gameState.meter.suspicion >= 60) {
+        gameState.meter.insight = clamp('insight', gameState.meter.insight - Math.ceil((gameState.meter.suspicion - 60) / 10));
+    }
+
+    const dRes = 0.5 * (gameState.meter.severity - sev0) - 0.5 * (gameState.meter.mercy - mer0);
+    gameState.meter.resentment = clamp('resentment', gameState.meter.resentment + dRes);
+}
+
+function addLog(y, mo, msg) {
+    gameState.log.unshift({ y: y, m: mo, msg: msg });
+    if (gameState.log.length > 50) gameState.log.pop();
+    const list = document.getElementById('logList');
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = '<span class="log-time">' + y + '年' + mo + '月</span>' + msg;
+    list.insertBefore(entry, list.firstChild);
+    while (list.children.length > 50) list.removeChild(list.lastChild);
+}
+
+/* ---------- 支线事件 ---------- */
+let randomPool = [];
+
+function afterMemorial(doneIdx) {
+    const curated = SCHEDULED[doneIdx];
+    if (curated) {
+        curated.forEach(e => gameState.queue.push(e));
+    } else if (Math.random() < 0.26) {
+        if (!randomPool.length) randomPool = RANDOM_EVENTS.slice();
+        const pick = randomPool.splice(Math.floor(Math.random() * randomPool.length), 1)[0];
+        const ev = JSON.parse(JSON.stringify(pick));
+        ev.year = gameState.year; ev.month = gameState.month;
+        gameState.queue.push(ev);
+    }
+    processQueue();
+}
+
+function processQueue() {
+    if (gameState.queue.length) {
+        showEvent(gameState.queue.shift());
+        return;
+    }
+    showMemorial();
+}
+
+function showEvent(ev) {
+    const box = document.getElementById('memorialContainer');
+    gameState.currentEvent = ev;
+    gameState.year = ev.year; gameState.month = ev.month;
+    updateYear();
+
+    const opts = ev.options.map((o, i) =>
+        '<button class="option-btn" onclick="selectEventOption(' + i + ')">' +
+            '<div class="option-label">' + (i + 1) + '. ' + o.label + '</div>' +
+            (o.hint ? '<div class="option-hint">※ ' + o.hint + '</div>' : '') +
+        '</button>').join('');
+
+    box.innerHTML =
+        '<div class="event-card" data-tag="' + ev.tag + '">' +
+            '<div class="event-ribbon">' + (ev.tagName || '邸报') + '</div>' +
+            '<div class="memorial-meta">' +
+                '<div class="memorial-from">' + ev.from + '</div>' +
+                '<div class="memorial-date">' + yearLabel(ev.year) + ' ' + ev.month + '月</div>' +
+            '</div>' +
+            '<div class="memorial-title">' + ev.title + '</div>' +
+            '<div class="memorial-summary">' + ev.summary + '</div>' +
+            '<div class="memorial-body">' + ev.body + '</div>' +
+            '<div class="options">' + opts + '</div>' +
+        '</div>';
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function selectEventOption(i) {
+    const ev = gameState.currentEvent;
+    const opt = ev.options[i];
+    if (!opt) return;
+    applyEffects(opt.effects);
+    addLog(ev.year, ev.month, opt.log);
+    gameState.eventCount++;
+    updateAll();
+    processQueue();
+}
+
+/* ---------- 结局 ---------- */
+function endGame() {
+    const r = gameState.reforms;
+    const m = gameState.meter;
+    const o = gameState.officials;
+    const reformAvg = (r.huohao + r.tandin + r.tuigu) / 3;
+    const stateAvg = (gameState.imperialPower + gameState.publicSupport + gameState.officialMorale + gameState.militaryStrength) / 4;
+    const oAvg = (o.zhangTingyu + o.tianWenjing + o.yunxiang + o.eertai + o.liwei) / 5;
+    const style = m.severity - m.mercy;   // 正=偏严刻，负=偏宽仁
+
+    let rank, title, body;
+    if (gameState.imperialPower < 26 || gameState.publicSupport < 20 || gameState.treasury <= 0) {
+        rank = '社稷危局';
+        title = '十三年而国势日蹙';
+        body = '朕初以锐意立法，非求苛急也。乃 decrees 日多，闾里苦之；帑藏不给，边军枵虚；宗室离心，士林侧目。' +
+               '十三年中，朕每下一诏，吏益苛而民益怨；每用一人，恩一失而疑四起。' +
+               '此非一人之过，乃朕之过也。社稷之危，不在今日，在朕之不能知人、不能惜民、不能自抑。';
+    } else if (m.suspicion >= 75 && gameState.officialMorale <= 70) {
+        rank = '多疑之君';
+        title = '信密报而疑天下';
+        body = '朕之治，始于密折，终于密折。' +
+               '初时一二密报，朕以为得其真；继则十数密报，朕以为尽得其真。' +
+               '于是廷议不敢尽言，外奏不敢尽实，惟密报是听。' +
+               '及乎邸递日繁，朕之神明反为所困：疑臣之忠，疑民之怨，疑左右之不尽己意。' +
+               '朕自以为察于隐微，而不知察者已为谗所蔽。此非臣之罪，朕自取之。';
+    } else if (gameState.mizeSkipped >= 24 && m.insight <= 30 && reformAvg < 70) {
+        rank = '闭目之君';
+        title = '不欲闻，故不欲知';
+        body = '密折者，朕之所以通下情也。朕既不阅，则下情不通；下情不通，则朕之所知皆由他人之口。' +
+               '是以奸狡者得以饰过，忠直者无从自明，朕所行者不过因循故事而已。' +
+               '十三年间，天下事有进有退，而进者未必出于朕，退者亦不能诿于朕。' +
+               '非不欲治也，乃不欲闻而已。不闻则不察，不察则不悟，此朕之蔽也。';
+    } else if (o.nianGengyao >= 62 && gameState.imperialPower < 52) {
+        rank = '权臣之祸';
+        title = '威福自上，纲纪自下';
+        body = '朕之过不在用年羹尧，而在信之太深、防之太疏。' +
+               '其奏事「便宜」，朕不之疑；其僭越逾制，朕不之问。既受其功，遂并受其骄；既与其权，遂失其权。' +
+               '朝廷之法坏，非一朝一夕之故，而朕实启之。' +
+               '后之人若以朕为鉴，则朕之罪可少；若以朕为法，则天下之害更深。';
+    } else if (style >= 25 && m.integrity >= 55 && m.resentment >= 50) {
+        rank = '酷吏之治';
+        title = '法严于上，怨结于下';
+        body = '朕于吏治，志在澄清，不惜重法。田文镜、朱轼、李卫、鄂尔泰之徒，皆以严刻见长。' +
+               '一时仓储稍实、积逋稍清，而天下已有「雍正刻」之名。' +
+               '吏民相仇，案件日繁，虽有清吏数十，亦不能救其末。' +
+               '此非治世之法，乃乱世之法：以苛察为明，以民力为财，以怨为力。朕不自知其蔽，臣工亦不敢言。';
+    } else if (style <= -25 && reformAvg < 52 && m.resentment <= 28 && gameState.publicSupport >= 60) {
+        rank = '宽仁之君';
+        title = '恩洽于民，而功阙于世';
+        body = '朕于天下，常存仁恕之心：宽赋、缓征、赈灾、怜民，十三年中未尝一日忘之。' +
+               '故士民怀之，谓之「雍正是好」。' +
+               '然新政未竟：火耗归公仅行于数省，摊丁入亩未及天下，改土归流犹有待于来日。' +
+               '宽而无断，则积弊如故。朕不以刻为明，终亦不能以宽为治。此朕之憾。';
+    } else if (reformAvg >= 68 && stateAvg >= 68 && gameState.imperialPower >= 72 && m.insight >= 40 && m.suspicion <= 60) {
+        rank = '千古一帝';
+        title = '十三年励精图治，功在社稷';
+        body = '十三年中，朕未尝一日敢懈。火耗归公，则吏有廉俸而民无加派；摊丁入亩，则无丁之民免其役；改土归流，则苗疆百年之害一旦而解。' +
+               '用年羹尧而知其骄，用鄂尔泰而知其强，用隆科多而知其贪，用怡亲王而知其忠。赏罚不爽，纲纪肃然。' +
+               '虽年羹尧骄而自戕，隆科多贪而自败，宗室怨朕刻，而天下后世知朕之刻，正为救天下。' +
+               '密折不厌其多，而朕不以密折为独听之资；知其可用，而更知其可疑，此明察之所以为明察也。' +
+               '此十三年者，政在勤民，权在朕躬，纵有身后毁誉，朕不恤也。';
+    } else if (reformAvg >= 52 && stateAvg >= 58) {
+        rank = '有为之君';
+        title = '守成有余，革新稍滞';
+        body = '十三年中，朕所行者三：清吏治、开言路、兴水利。火耗归公渐次推行，摊丁入亩各省不一，改土归流已成规模。' +
+               '然所憾者：新政多出严刻，而宽大之量不足；有司奉行者半，惟上之意是听。' +
+               '所幸皇权已固，纲纪未弛。乾隆继之，或可补吾之未竟。';
+    } else if (reformAvg >= 32 && stateAvg >= 45) {
+        rank = '守成之君';
+        title = '危机四伏，勉力支撑';
+        body = '朕尝求治太急，用人太杂，恩威之间失其平。十三年中，官司不清则民怨，赏罚不当则官怨。' +
+               '火耗归公者半途而废，摊丁入亩者仅及数省，改土归流者亦未尽。' +
+               '所幸社稷无恙，宗庙不倾。身后之责，付之子孙。';
+    } else {
+        rank = '平庸之主';
+        title = '十三年功业，付之一空';
+        body = '朕以少年继位，志大而才疏，求治而不恤人情。密折既行，廷寄既设，而天下离心。' +
+               '年羹尧骄而不可制，隆科多贪而不可制，宗室怨而不可制。' +
+               '新政半途而废，吏治益坏，民生益困。此十三年，朕之过也。';
+    }
+
+    const fates = buildFates(o);
+
+    document.getElementById('memorialContainer').innerHTML =
+        '<div class="ending-card">' +
+            '<h2>雍正十三年 · 驾崩</h2>' +
+            '<div class="ending-rank">' + rank + ' · ' + title + '</div>' +
+            '<div class="ending-body">' + body + '</div>' +
+            '<div class="score-grid">' +
+                scoreBox('改革总评', Math.round(reformAvg) + '%') +
+                scoreBox('综合国力', Math.round(stateAvg) + '分') +
+                scoreBox('火耗归公', r.huohao + '%') +
+                scoreBox('摊丁入亩', r.tandin + '%') +
+                scoreBox('改土归流', r.tuigu + '%') +
+                scoreBox('国库存银', Math.round(gameState.treasury) + '万两') +
+                scoreBox('严刻 / 宽仁', m.severity + ' / ' + m.mercy) +
+                scoreBox('取向（严−宽）', (style > 0 ? '偏严 ' : '偏宽 ') + style) +
+                scoreBox('吏治清度', m.integrity) +
+                scoreBox('民怨', m.resentment) +
+                scoreBox('明察', m.insight) +
+                scoreBox('猜忌', m.suspicion) +
+            '</div>' +
+            '<div class="score-grid">' +
+                scoreBox('阅密折', gameState.secretMemorials + ' 封') +
+                scoreBox('封还不阅', gameState.mizeSkipped + ' 封') +
+                scoreBox('事后追悔', gameState.mistakes + ' 次') +
+                scoreBox('支线事件', gameState.eventCount + ' 事') +
+                scoreBox('奏折阅毕', gameData.length + ' 折') +
+                scoreBox('百官归心', Math.round(oAvg)) +
+            '</div>' +
+            '<div class="fates"><h4>人 事 终 局</h4>' +
+                fates.map(f => '<div class="fate-line"><div class="fate-who">' + f.who + '</div><div class="fate-what">' + f.what + '</div></div>').join('') +
+            '</div>' +
+            '<div class="ending-actions"><button onclick="restartGame()">重 开 天 命</button></div>' +
+        '</div>';
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = '十三载已终 · ' + gameData.length + ' 折阅毕';
+}
+
+function scoreBox(k, v) {
+    return '<div class="score-box"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>';
+}
+
+function buildFates(o) {
+    const out = [];
+    out.push({ who: '怡亲王允祥', what: o.yunxiang >= 60
+        ? '鞠躬尽瘁，为皇上最心腹之臣。雍正八年薨，年仅四十四，皇上辍朝三日，终身悼之。'
+        : '为皇上总理事务多年，积劳成疾。雍正八年薨，年仅四十四。' });
+    out.push({ who: '张廷玉', what: o.zhangTingyu >= 70
+        ? '始终倚为股肱，谨慎廉洁。乾隆时以大学士主持朝政，至乾隆四年方以年老致仕，十年而卒。'
+        : '晚年办事渐形倚重，乾隆时罢黜，居家以终。' });
+    out.push({ who: '田文镜', what: o.tianWenjing >= 60
+        ? '清峻刻核，推行火耗归公最有功。雍正十三年五月病卒于河南任所，家无余财。'
+        : '以严刻得怨，雍正十三年病卒河南，士论毁誉参半。' });
+    out.push({ who: '鄂尔泰', what: o.eertai >= 60
+        ? '经理西南，改土归流之功，亘古未有。雍正十三年三月病卒，年六十八，雍正为之震悼。'
+        : '雍正十三年三月病卒于任，年六十八。所行苗政，后世毁誉不一。' });
+    out.push({ who: '年羹尧', what: o.nianGengyao >= 55
+        ? '受赏封爵，望无两。然骄盈不改，雍正三年以数十款罪状赐死于历城狱中。朕之识人，止于此耳。'
+        : (o.nianGengyao <= -45
+            ? '雍正二年即被夺爵下狱，逾年赐死。朕用之而不疑其骄，终至如此。'
+            : '雍正二年夺爵，圈禁逾年而卒，籍没家产。') });
+    out.push({ who: '隆科多', what: o.longkodo <= -45
+        ? '雍正元年十二月圈禁，翌年五月死于狱中，家产尽入官。其党俱坐。'
+        : '雍正元年以罪圈禁，雍正二年五月卒，年五十一。' });
+    out.push({ who: '允禩', what: o.yinsi <= -40
+        ? '雍正四年削爵，改名阿其那，圈禁宗人府，逾年死于幽禁。朕之宗室政策自此严矣。'
+        : '雍正四年削爵禁锢，终身不复出。' });
+    out.push({ who: '李卫', what: o.liwei >= 55
+        ? '历官浙、闽、云、陕，办事干练。雍正十三年十一月卒，年六十一。'
+        : '雍正十三年卒。历任虽多，时人亦以其刻而毁之。' });
+    return out;
+}
+
+function restartGame() {
+    gameState.index = 0;
+    gameState.year = 1723; gameState.month = 8;
+    gameState.treasury = 800; gameState.publicSupport = 60; gameState.officialMorale = 50;
+    gameState.imperialPower = 50; gameState.militaryStrength = 55;
+    gameState.secretMemorials = 0; gameState.mizeSkipped = 0; gameState.mistakes = 0;
+    gameState.eventCount = 0;
+    gameState.reforms = { huohao: 0, tandin: 0, tuigu: 0 };
+    gameState.meter = { severity: 45, mercy: 50, integrity: 40, resentment: 40 };
+    gameState.officials = Object.assign({}, INITIAL_OFFICIALS);
+    gameState.mizeState = {};
+    gameState.log = [];
+    gameState.queue = [];
+    randomPool = [];
+    document.getElementById('logList').innerHTML = '';
+    updateAll();
+    showMemorial();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- 键盘 ---------- */
+document.addEventListener('keydown', function (e) {
+    if (gameState.index >= gameData.length) return;
+    if (e.key === 'm' || e.key === 'M') {
+        const idx = gameState.index;
+        if (gameData[idx] && gameData[idx].mize && !gameState.mizeState[idx]) { readMize(); return; }
+    }
+    if (e.key === '1' || e.key === '2' || e.key === '3') {
+        const i = parseInt(e.key, 10) - 1;
+        const m = gameData[gameState.index];
+        if (m && visibleOptions(m, gameState.index)[i]) selectOption(i);
+    }
+});
+
+document.getElementById('startBtn').addEventListener('click', startGame);
+
+</script>
+</body>
+</html>

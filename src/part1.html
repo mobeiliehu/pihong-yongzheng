@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>批红 · 雍正十三年</title>
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes seal { 0% { transform: rotate(-10deg) scale(0); opacity: 0; } 50% { transform: rotate(5deg) scale(1.1); } 100% { transform: rotate(0deg) scale(1); opacity: 1; } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes glowPulse { 0%,100% { box-shadow: 0 0 0 rgba(212,175,55,0); } 50% { box-shadow: 0 0 18px rgba(212,175,55,.45); } }
+    :root {
+        --imperial-red: #8b0000;
+        --imperial-gold: #d4af37;
+        --paper-bg: #faf8f0;
+        --ink-black: #1a1a1a;
+        --seal-red: #c41e3a;
+        --jade: #2e6b5e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: "STKaiti", "KaiTi", "SimSun", serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: var(--ink-black);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body::before {
+        content: '';
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(212,175,55,0.10) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(139,0,0,0.10) 0%, transparent 50%);
+        pointer-events: none; z-index: 0;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; position: relative; z-index: 1; }
+
+    /* ---------- 开场 ---------- */
+    .splash {
+        position: fixed; inset: 0; z-index: 50;
+        background: radial-gradient(circle at 50% 40%, #3a2b12 0%, #141414 70%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; text-align: center; padding: 30px;
+    }
+    .splash h1 {
+        font-size: 3.6em; letter-spacing: 16px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        animation: float 3s ease-in-out infinite;
+    }
+    .splash .sub { color: var(--imperial-gold); font-size: 1.15em; letter-spacing: 6px; line-height: 2; }
+    .splash .hint { color: rgba(250,248,240,.65); font-size: .95em; line-height: 1.9; max-width: 640px; }
+    .splash button {
+        margin-top: 12px; padding: 14px 52px; font-size: 1.15em; cursor: pointer;
+        font-family: inherit; letter-spacing: 6px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, #a51a1a 100%);
+        color: var(--imperial-gold); border: 2px solid var(--imperial-gold); border-radius: 8px;
+        transition: all .3s;
+    }
+    .splash button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,.4); }
+    .splash.hidden { display: none !important; }
+
+    /* ---------- 头部 ---------- */
+    header { text-align: center; padding: 34px 20px 18px; animation: fadeIn .8s ease-out; }
+    h1.title {
+        font-size: 3.2em;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        margin-bottom: 10px; letter-spacing: 14px;
+    }
+    .subtitle { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+
+    /* ---------- 时间 / 进度 ---------- */
+    .timeline-bar {
+        display: flex; align-items: center; justify-content: center; gap: 14px;
+        margin: 22px 0 8px; flex-wrap: wrap;
+    }
+    .year-display {
+        font-size: 1.5em; color: var(--imperial-gold); font-weight: bold;
+        text-shadow: 0 0 20px rgba(212,175,55,.45);
+    }
+    .progress-wrap { width: 100%; max-width: 620px; margin: 6px auto 26px; }
+    .progress-track { height: 8px; background: rgba(255,255,255,.10); border-radius: 4px; overflow: hidden; border: 1px solid rgba(212,175,55,.35); }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--imperial-red), var(--imperial-gold)); transition: width .5s ease; }
+    .progress-label { text-align: center; color: rgba(212,175,55,.8); font-size: .85em; letter-spacing: 2px; margin-top: 6px; }
+
+    /* ---------- 数值面板 ---------- */
+    .stats-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 16px; margin-bottom: 26px; animation: fadeIn .8s ease-out .2s both; }
+    .stat-card {
+        background: linear-gradient(135deg, rgba(250,248,240,.95) 0%, rgba(255,255,255,.9) 100%);
+        border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 16px;
+        text-align: center; transition: all .35s; box-shadow: 0 8px 20px rgba(0,0,0,.3);
+    }
+    .stat-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 30px rgba(212,175,55,.35); }
+    .stat-card.danger { border-color: var(--seal-red); animation: glowPulse 1.8s ease-in-out infinite; }
+    .stat-label { font-size: .88em; color: var(--imperial-red); margin-bottom: 6px; font-weight: bold; letter-spacing: 2px; }
+    .stat-value { font-size: 1.55em; font-weight: bold; background: linear-gradient(135deg, var(--imperial-red) 0%, var(--imperial-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-bar { width: 100%; height: 6px; background: rgba(0,0,0,.1); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+    .stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--imperial-red), var(--imperial-gold)); border-radius: 3px; transition: width .5s ease-out; }
+
+    /* ---------- 改革进度 ---------- */
+    .reform-panel {
+        background: rgba(26,26,26,.75); border: 2px solid var(--imperial-gold); border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 26px;
+    }
+    .reform-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 14px; text-align: center; font-weight: normal; }
+    .reform-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .reform-name { color: #f0ece0; width: 92px; font-size: .95em; flex: none; }
+    .reform-track { flex: 1; height: 12px; background: rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; }
+    .reform-fill { height: 100%; width: 0%; border-radius: 6px; transition: width .6s ease; background: linear-gradient(90deg, #6b3b1a, var(--imperial-gold)); }
+    .reform-num { color: var(--imperial-gold); width: 46px; text-align: right; font-size: .9em; flex: none; }
+
+    /* ---------- 人物面板 ---------- */
+    .people-panel { background: rgba(26,26,26,.75); border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 18px 22px; margin-bottom: 26px; }
+    .people-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 14px; text-align: center; font-weight: normal; }
+    .people-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 22px; }
+    .person { display: flex; align-items: center; gap: 10px; }
+    .person-name { width: 92px; flex: none; color: #f0ece0; font-size: .95em; }
+    .person-track { flex: 1; height: 10px; background: rgba(255,255,255,.08); border-radius: 5px; position: relative; overflow: hidden; }
+    .person-track::before { content:''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(212,175,55,.35); }
+    .person-fill { position: absolute; top: 0; bottom: 0; border-radius: 5px; transition: all .6s ease; }
+    .person-fill.pos { background: linear-gradient(90deg, rgba(212,175,55,.35), var(--imperial-gold)); }
+    .person-fill.neg { background: linear-gradient(90deg, var(--seal-red), rgba(196,30,58,.4)); }
+    .person-val { width: 44px; text-align: right; font-size: .88em; flex: none; color: var(--imperial-gold); }
+    .person-val.neg { color: #e8788c; }
+
+    /* ---------- 奏折 ---------- */
+    .memorial-card {
+        background: var(--paper-bg); border: 3px solid var(--imperial-gold); border-radius: 16px;
+        padding: 34px; margin-bottom: 26px; box-shadow: 0 15px 40px rgba(0,0,0,.5);
+        position: relative; animation: slideIn .5s ease-out;
+    }
+    .memorial-card::before {
+        content: '奏'; position: absolute; top: -20px; right: 40px;
+        width: 58px; height: 58px; background: var(--seal-red); color: var(--imperial-gold);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.7em; font-weight: bold; border: 3px solid var(--imperial-gold);
+        box-shadow: 0 5px 15px rgba(196,30,58,.6); animation: seal .8s cubic-bezier(.68,-.55,.265,1.55);
+    }
+    .memorial-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid var(--imperial-gold); padding-bottom: 16px; margin-bottom: 16px; }
+    .memorial-from { color: var(--imperial-red); font-size: 1.05em; font-weight: bold; }
+    .memorial-date { color: #8a7f66; font-size: .9em; letter-spacing: 1px; }
+    .memorial-title { font-size: 1.45em; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
+    .memorial-summary { color: #666; font-style: italic; line-height: 1.8; border-left: 3px solid rgba(212,175,55,.7); padding-left: 12px; }
+    .memorial-body { margin: 22px 0; line-height: 2.15; text-indent: 2em; white-space: pre-wrap; font-size: 1.05em; color: #262626; }
+    .zhupi { background: linear-gradient(135deg, #ffe4e1 0%, #ffd4d4 100%); border-left: 5px solid var(--seal-red); padding: 18px 20px; margin: 18px 0; border-radius: 8px; }
+    .zhupi-label { font-weight: bold; color: var(--seal-red); margin-bottom: 6px; letter-spacing: 2px; }
+    .zhupi-text { color: var(--seal-red); font-size: 1.15em; font-weight: bold; line-height: 1.95; }
+    .mize { background: linear-gradient(135deg, #f2f0ea 0%, #e3e0d6 100%); border-left: 5px solid #555; padding: 18px 20px; margin: 18px 0; border-radius: 8px; display: none; }
+    .mize.revealed { display: block; animation: fadeIn .4s ease-out; }
+    .mize-label { font-weight: bold; color: #444; margin-bottom: 6px; letter-spacing: 2px; }
+    .mize-text { color: #333; line-height: 1.95; }
+    .reveal-btn {
+        display: inline-block; padding: 10px 22px; margin: 6px 0;
+        background: linear-gradient(135deg, #4a4a4a 0%, #6e6e6e 100%); color: #f5f2e8;
+        border: 1px solid #333; border-radius: 6px; cursor: pointer; font-size: .98em; font-family: inherit;
+        transition: all .3s;
+    }
+    .reveal-btn:hover { background: linear-gradient(135deg, #3c3c3c 0%, #5c5c5c 100%); transform: translateY(-2px); }
+    .options { margin-top: 26px; }
+    .option-btn {
+        display: block; width: 100%; padding: 18px 24px; margin: 12px 0;
+        background: linear-gradient(135deg, rgba(250,248,240,.92) 0%, rgba(255,255,255,.82) 100%);
+        border: 3px solid var(--imperial-gold); border-radius: 12px; cursor: pointer;
+        transition: all .35s; text-align: left; font-size: 1.05em; color: var(--ink-black);
+        font-family: inherit; box-shadow: 0 5px 15px rgba(0,0,0,.2);
+    }
+    .option-btn:hover { background: linear-gradient(135deg, #fffdf7 0%, #fff6ea 100%); border-color: var(--imperial-red); transform: translateX(10px); }
+    .option-label { font-weight: bold; font-size: 1.15em; color: var(--imperial-red); }
+    .option-hint { color: #777; font-size: .88em; margin-top: 6px; line-height: 1.7; }
+
+    /* ---------- 记事 ---------- */
+    .log-panel {
+        background: linear-gradient(135deg, rgba(26,26,26,.9) 0%, rgba(45,45,45,.85) 100%);
+        border: 2px solid var(--imperial-gold); border-radius: 12px; padding: 22px;
+        margin-top: 34px; max-height: 380px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    }
+    .log-panel h3 { color: var(--imperial-gold); font-size: 1.05em; letter-spacing: 3px; margin-bottom: 12px; font-weight: normal; }
+    .log-entry { padding: 10px 0; border-bottom: 1px dashed rgba(212,175,55,.3); color: var(--imperial-gold); font-size: .96em; line-height: 1.8; }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry .log-time { color: rgba(212,175,55,.6); margin-right: 8px; }
+
+    /* ---------- 结局 ---------- */
+    .ending-card { background: var(--paper-bg); border: 3px solid var(--imperial-gold); border-radius: 16px; padding: 40px; box-shadow: 0 15px 40px rgba(0,0,0,.5); animation: fadeIn .8s ease-out; }
+    .ending-card h2 { text-align: center; font-size: 2.3em; color: var(--imperial-red); margin-bottom: 8px; letter-spacing: 8px; }
+    .ending-rank { text-align: center; font-size: 1.5em; color: var(--imperial-gold); margin-bottom: 26px; letter-spacing: 4px; }
+    .ending-card .ending-body { font-size: 1.08em; line-height: 2.1; text-indent: 2em; color: #2a2a2a; }
+    .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin: 26px 0; }
+    .score-box { background: rgba(255,255,255,.7); border: 1px solid rgba(212,175,55,.6); border-radius: 10px; padding: 14px; text-align: center; }
+    .score-box .k { color: #777; font-size: .85em; letter-spacing: 2px; }
+    .score-box .v { font-size: 1.5em; font-weight: bold; color: var(--imperial-red); }
+    .fates { background: rgba(0,0,0,.04); border-radius: 10px; padding: 18px 22px; margin: 24px 0; }
+    .fates h4 { color: var(--imperial-red); letter-spacing: 3px; margin-bottom: 12px; font-size: 1.05em; }
+    .fate-line { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed rgba(0,0,0,.1); font-size: .97em; line-height: 1.7; }
+    .fate-line:last-child { border-bottom: none; }
+    .fate-who { width: 92px; flex: none; font-weight: bold; color: #444; }
+    .fate-what { flex: 1; color: #333; }
+    .ending-actions { text-align: center; margin-top: 30px; }
+    .ending-actions button {
+        padding: 13px 46px; font-size: 1.08em; cursor: pointer; font-family: inherit; letter-spacing: 5px;
+        background: linear-gradient(135deg, var(--imperial-red) 0%, #a51a1a 100%); color: var(--imperial-gold);
+        border: 2px solid var(--imperial-gold); border-radius: 8px; transition: all .3s;
+    }
+    .ending-actions button:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(212,175,55,.4); }
+
+    .warn {
+        background: rgba(196,30,58,.12); border-left: 4px solid var(--seal-red); color: #f0c9cf;
+        padding: 12px 16px; border-radius: 6px; font-size: .92em; margin: 14px 0; display: none;
+    }
+    .warn.show { display: block; }
+
+
+    /* ---------- 密折抉择 ---------- */
+    .mize-choice { background: rgba(40,40,40,.06); border: 1px dashed rgba(212,175,55,.85); border-radius: 10px; padding: 18px 20px; margin: 18px 0; }
+    .mize-choice-text { color: #4a4a4a; line-height: 1.95; font-size: .98em; }
+    .mize-choice-text b { color: var(--imperial-red); }
+    .mize-choice-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .skip-btn {
+        display: inline-block; padding: 10px 22px; margin: 6px 0;
+        background: linear-gradient(135deg, #efece2 0%, #ded9c9 100%); color: #5a5548;
+        border: 1px solid #b9b29a; border-radius: 6px; cursor: pointer; font-size: .98em; font-family: inherit;
+        transition: all .3s;
+    }
+    .skip-btn:hover { background: linear-gradient(135deg, #f6f3e9 0%, #e8e2d0 100%); transform: translateY(-2px); }
+    .mize.sealed { display: block; background: linear-gradient(135deg, #efeee8 0%, #e6e4dc 100%); border-left-color: #999; }
+    .mize.sealed .mize-text { color: #777; font-style: italic; }
+    .option-tag { display: inline-block; margin-top: 8px; padding: 3px 10px; font-size: .78em; letter-spacing: 1px; color: #6b4f16; background: rgba(212,175,55,.28); border-radius: 10px; }
+
+
+    /* 密折抉择：代价表 */
+    .mize-cost-table { margin-top: 14px; border: 1px solid rgba(120,100,40,.35); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.55); }
+    .mct-row { display: grid; grid-template-columns: 84px 56px 56px 1fr; gap: 8px; align-items: start; padding: 9px 12px; border-bottom: 1px dashed rgba(120,100,40,.28); font-size: .9em; line-height: 1.7; }
+    .mct-row:last-child { border-bottom: none; }
+    .mct-head { background: rgba(212,175,55,.22); font-weight: bold; color: #4a3a10; letter-spacing: 1px; }
+    .mct-k { font-weight: bold; color: var(--imperial-red); }
+    .mct-up { color: #1f7a4d; font-weight: bold; }
+    .mct-down { color: #9a6a1c; font-weight: bold; }
+    .mct-d { color: #555; }
+    .mct-d b { color: #333; }
+    .mct-d b.warntxt, .warntxt { color: var(--seal-red); }
+    .mize-current { margin-top: 12px; font-size: .88em; color: #6a6355; letter-spacing: 1px; }
+    .mize-current b { color: var(--imperial-red); }
+    .reveal-btn em, .skip-btn em { display: block; font-style: normal; font-size: .78em; opacity: .85; letter-spacing: 1px; margin-top: 3px; }
+    .mize-cost { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(120,100,40,.3); font-size: .88em; color: #6a6355; letter-spacing: 1px; }
+    /* 圣心二端 */
+    .heart-note { font-size: .78em; color: rgba(240,236,224,.55); margin: -4px 0 10px 92px; letter-spacing: 1px; }
+    @media (max-width: 640px) { .heart-note { margin-left: 74px; } .mct-row { grid-template-columns: 70px 44px 44px 1fr; font-size: .84em; } }
+
+    /* ---------- 支线事件 ---------- */
+    .event-card {
+        background: linear-gradient(135deg, #fdfaf2 0%, #f4f0e3 100%);
+        border: 3px solid #8a7f66; border-radius: 16px; padding: 34px; margin-bottom: 26px;
+        box-shadow: 0 15px 40px rgba(0,0,0,.5); position: relative; animation: slideIn .5s ease-out;
+    }
+    .event-card[data-tag="灾异"] { border-color: #2e6b5e; }
+    .event-card[data-tag="言官"] { border-color: #7b3fa0; }
+    .event-card[data-tag="宗室"] { border-color: #b8860b; }
+    .event-card[data-tag="边事"] { border-color: #8b0000; }
+    .event-card[data-tag="民变"], .event-card[data-tag="民生"] { border-color: #3b5f8a; }
+    .event-ribbon {
+        position: absolute; top: -16px; left: 34px; padding: 6px 18px;
+        background: #4a4636; color: var(--imperial-gold); font-size: .9em; letter-spacing: 3px;
+        border-radius: 6px; border: 2px solid var(--imperial-gold); box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    }
+    .event-card .memorial-from { color: #4a4636; }
+    .event-card .memorial-title::after { content: ''; }
+    .reform-fill.alt { background: linear-gradient(90deg, #2e6b5e, #7fb8a6); }
+    .reform-track.axis { position: relative; }
+    .reform-track.axis .axis-mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: rgba(212,175,55,.75); }
+    .reform-fill.axisfill { position: absolute; top: 0; bottom: 0; }
+    .reform-fill.axisfill.sev { background: linear-gradient(90deg, rgba(196,30,58,.45), var(--seal-red)); }
+    .reform-fill.axisfill.mer { background: linear-gradient(90deg, #4f8f7e, rgba(127,184,166,.5)); }
+
+    @media (max-width: 768px) {
+        h1.title { font-size: 2.2em; letter-spacing: 8px; }
+        .splash h1 { font-size: 2.4em; letter-spacing: 8px; }
+        .stats-panel { grid-template-columns: repeat(2, 1fr); }
+        .memorial-card { padding: 24px; }
+        .reform-name, .person-name { width: 74px; font-size: .88em; }
+        .fate-who { width: 74px; }
+    }
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+    <h1>批红 · 雍正十三年</h1>
+    <div class="sub">雍正元年（1723）至雍正十三年（1735）</div>
+    <div class="hint">
+        你是雍正。十三载春秋，三十余道奏折待批。<br>
+        每一道硃批，都是一次取舍：钱粮、民心、军权、吏治、宗室，样样都要。<br>
+        朝堂之上，有人忠、有人骄、有人观望、有人等你看错人。
+    </div>
+    <button id="startBtn">登 极</button>
+</div>
+
+<div class="container" id="container" style="display:none">
+    <header>
+        <h1 class="title">批 红</h1>
+        <p class="subtitle">雍正十三年 · 十三道纪年</p>
+    </header>
+
+    <div class="timeline-bar">
+        <div class="year-display" id="yearDisplay">雍正元年（1723）</div>
+    </div>
+    <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">第 1 / 33 折</div>
+    </div>
+
+    <div class="stats-panel" id="statsPanel"></div>
+    <div id="warningBox"></div>
+
+    <div class="reform-panel">
+        <h3>国 政 大 业</h3>
+        <div id="reformPanel"></div>
+    </div>
+
+
+    <div class="reform-panel">
+        <h3>朝 局 取 向</h3>
+        <div id="meterPanel"></div>
+    </div>
+
+    <div class="reform-panel">
+        <h3>圣 心 二 端</h3>
+        <div id="heartPanel"></div>
+    </div>
+
+    <div class="people-panel">
+        <h3>朝 局 人 心</h3>
+        <div class="people-grid" id="peoplePanel"></div>
+    </div>
+
+    <div id="memorialContainer"></div>
+
+    <div class="log-panel" id="logPanel">
+        <h3>起 居 注</h3>
+        <div id="logList"></div>
+    </div>
+</div>
+
+<script>
