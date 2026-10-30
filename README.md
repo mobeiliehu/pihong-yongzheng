@@ -76,3 +76,13 @@ printf '\n</script>\n</body>\n</html>\n' >> index.html
 ## 说明
 
 本作为历史题材的策略演绎游戏，人物与事件均取自史实；数值与结局为游戏化设计，不代表对历史人物的客观评价。
+
+---
+
+## 其他项目
+
+| 项目 | 在线 | 仓库 |
+|---|---|---|
+| 🐾 宠物换装 · PetStyle AI（v2.0） | https://mobeiliehu.github.io/pet-style-ai/ | https://github.com/mobeiliehu/pet-style-ai |
+
+> 宠物换装 v2 支持三种接入方式：**自带 API Key 直连**（Gemini / OpenAI / 火山方舟 / 千问 / 自定义中转）、**自建 API 端口**（密钥放服务端 Worker / Node）、**离线降级**（纯浏览器 Canvas 合成，断网可用），并可安装为 App。
